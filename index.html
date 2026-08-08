@@ -24,39 +24,69 @@
       --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    /* BẢO MẬT: Chặn chọn văn bản / bôi đen toàn trang */
+    * {
+      box-sizing: border-box; margin: 0; padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
     /* Header & Navigation */
     header {
-      background: var(--surface);
+      background: rgba(255, 255, 255, 0.9);
       border-bottom: 1px solid var(--border);
       position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
     }
     .header-container {
-      max-width: 1200px; margin: 0 auto; padding: 16px 24px;
-      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
     }
     .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
     .logo i { font-size: 1.5rem; }
 
     .nav-tabs { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
     .tab-btn {
-      padding: 10px 20px; border: none; background: transparent;
-      color: var(--text-muted); font-weight: 600; font-size: 0.9rem;
+      padding: 8px 16px; border: none; background: transparent;
+      color: var(--text-muted); font-weight: 600; font-size: 0.88rem;
       border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 6px; text-decoration: none;
     }
     .tab-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
+    /* TRANG BÌA (Hero Banner) */
+    .hero-banner {
+      max-width: 1200px; width: 100%; margin: 24px auto 0; padding: 0 24px;
+    }
+    .hero-card {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+      color: white; box-shadow: var(--shadow); display: flex; align-items: center; min-height: 220px;
+    }
+    .hero-img {
+      position: absolute; right: 0; top: 0; width: 50%; height: 100%;
+      object-fit: cover; opacity: 0.35; mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 2; padding: 36px 40px; max-width: 650px;
+    }
+    .hero-content h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
+    .hero-content p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
+
     /* Main Container */
-    main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 32px 24px; flex: 1; }
+    main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 24px; flex: 1; }
 
     /* Controls Bar (Filter & Search) */
     .controls-bar {
       display: flex; justify-content: space-between; align-items: center;
-      gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+      gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
     }
     .class-filter { display: flex; align-items: center; gap: 12px; }
     .class-filter label { font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
@@ -74,9 +104,7 @@
       color: var(--text-muted); pointer-events: none;
     }
 
-    .search-box {
-      position: relative; flex: 1; max-width: 320px;
-    }
+    .search-box { position: relative; flex: 1; max-width: 320px; }
     .search-box input {
       width: 100%; padding: 10px 16px 10px 40px; border-radius: 10px;
       border: 1px solid var(--border); outline: none; font-size: 0.9rem;
@@ -114,7 +142,25 @@
     }
     .btn-action:hover { background: var(--primary-hover); }
 
-    /* Empty & Loading States */
+    /* LIÊN HỆ TRỰC TIẾP GIÁO VIÊN */
+    .teacher-contact-section {
+      margin-top: 48px; background: var(--surface); border-radius: var(--radius);
+      padding: 28px 32px; border: 1px solid var(--border); box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    }
+    .contact-info-text h3 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .contact-info-text p { font-size: 0.9rem; color: var(--text-muted); }
+    .contact-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-contact {
+      padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600;
+      font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-contact:hover { transform: translateY(-2px); opacity: 0.95; }
+    .btn-zalo { background: #0068ff; color: white; }
+    .btn-fb { background: #1877f2; color: white; }
+    .btn-phone { background: #10b981; color: white; }
+
+    /* Empty & Skeleton States */
     .empty-state {
       text-align: center; padding: 60px 20px; background: var(--surface);
       border-radius: var(--radius); border: 1px dashed var(--border); grid-column: 1 / -1;
@@ -125,8 +171,7 @@
 
     .skeleton {
       background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-      background-size: 200% 100%; animation: skeleton-loading 1.5s infinite;
-      border-radius: 8px;
+      background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 8px;
     }
     @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
@@ -141,7 +186,7 @@
     .chat-toggle-btn:hover { transform: scale(1.08); background: var(--primary-hover); }
 
     .chat-widget {
-      position: fixed; bottom: 96px; right: 24px; width: 380px; height: 520px;
+      position: fixed; bottom: 96px; right: 24px; width: 400px; height: 540px;
       max-width: calc(100vw - 48px); max-height: calc(100vh - 120px);
       background: var(--surface); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       border: 1px solid var(--border); display: flex; flex-direction: column;
@@ -154,7 +199,7 @@
       background: var(--primary); color: white; padding: 16px 20px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .chat-header-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
+    .chat-header-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; }
     .chat-close-btn { background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; opacity: 0.8; }
     .chat-close-btn:hover { opacity: 1; }
 
@@ -163,7 +208,7 @@
       background: #f8fafc;
     }
     .msg {
-      max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 0.9rem; line-height: 1.5;
+      max-width: 88%; padding: 12px 16px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5;
       word-wrap: break-word; white-space: pre-wrap;
     }
     .msg.user {
@@ -192,19 +237,39 @@
     }
     .chat-send-btn:hover { background: var(--primary-hover); }
 
-    /* Responsiveness */
+    /* CHÂN TRANG (Footer Chuyên Nghiệp & Gọn Gàng) */
+    footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 20px 24px; margin-top: auto;
+    }
+    .footer-container {
+      max-width: 1200px; margin: 0 auto; display: flex;
+      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-left { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
+    .footer-left strong { color: var(--text); }
+    .footer-right { display: flex; gap: 16px; font-size: 0.85rem; }
+    .footer-right a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-right a:hover { color: var(--primary); }
+
+    /* Responsive */
     @media (max-width: 640px) {
       .header-container { flex-direction: column; align-items: stretch; }
-      .nav-tabs { width: 100%; justify-content: center; }
+      .nav-tabs { width: 100%; justify-content: center; flex-wrap: wrap; }
+      .hero-content { padding: 24px; }
+      .hero-content h1 { font-size: 1.4rem; }
       .controls-bar { flex-direction: column; align-items: stretch; }
       .search-box { max-width: 100%; }
+      .teacher-contact-section { flex-direction: column; align-items: stretch; text-align: center; }
+      .contact-buttons { justify-content: center; }
       .chat-widget { right: 16px; bottom: 88px; width: calc(100vw - 32px); }
+      .footer-container { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 
-  <!-- Header -->
+  <!-- Header Navigation -->
   <header>
     <div class="header-container">
       <div class="logo">
@@ -218,9 +283,24 @@
         <button id="btn-tests" class="tab-btn" onclick="switchTab('tests')">
           <i class="fa-solid fa-pen-to-square"></i> Bài kiểm tra Online
         </button>
+        <a href="#teacher-contact" class="tab-btn">
+          <i class="fa-solid fa-headset"></i> Hỏi bài Giáo viên
+        </a>
       </nav>
     </div>
   </header>
+
+  <!-- TRANG BÌA (HERO BANNER) -->
+  <section class="hero-banner">
+    <div class="hero-card">
+      <!-- Ảnh bìa placeholder (Bạn có thể thay link ảnh ở thẻ src bên dưới bất kỳ lúc nào) -->
+      <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" alt="Ảnh Bìa Lớp Học" class="hero-img" id="hero-cover-img">
+      <div class="hero-content">
+        <h1>Cổng Thông Tin Học Tập & Ôn Luyện</h1>
+        <p>Hệ thống tự động cập nhật tài liệu, kho bài tập và đề kiểm tra trực tuyến. Hỗ trợ giải bài 24/7 với Trợ lý AI thông minh.</p>
+      </div>
+    </div>
+  </section>
 
   <!-- Main Content -->
   <main>
@@ -249,6 +329,25 @@
     <div id="panel-tests" class="tab-panel">
       <div id="grid-tests" class="card-grid"></div>
     </div>
+
+    <!-- BỘ PHẬN LIÊN HỆ TRỰC TIẾP GIÁO VIÊN -->
+    <section class="teacher-contact-section" id="teacher-contact">
+      <div class="contact-info-text">
+        <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--primary);"></i> Cần Hỏi Bài Trực Tiếp Với Giáo Viên?</h3>
+        <p>Nếu câu hỏi phức tạp hoặc AI chưa giải đáp thỏa đáng, hãy gửi tin nhắn trực tiếp cho Thầy/Cô.</p>
+      </div>
+      <div class="contact-buttons">
+        <a href="https://zalo.me" target="_blank" class="btn-contact btn-zalo">
+          <i class="fa-solid fa-comment"></i> Nhắn Zalo
+        </a>
+        <a href="https://facebook.com" target="_blank" class="btn-contact btn-fb">
+          <i class="fa-brands fa-facebook"></i> Facebook
+        </a>
+        <a href="tel:0123456789" class="btn-contact btn-phone">
+          <i class="fa-solid fa-phone"></i> Gọi Điện
+        </a>
+      </div>
+    </section>
   </main>
 
   <!-- Floating Chatbot Widget -->
@@ -260,18 +359,32 @@
     <div class="chat-header">
       <div class="chat-header-info">
         <i class="fa-solid fa-bolt"></i>
-        <span>Trợ Lý Giải Bài AI (Groq)</span>
+        <span>Trợ Lý Giải Bài AI (Phân Tích & Chi Tiết)</span>
       </div>
       <button class="chat-close-btn" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="chat-body" id="chat-body">
-      <div class="msg ai">Xin chào! Mình là trợ lý AI. Bạn cần hỗ trợ hướng dẫn giải bài tập nào hôm nay?</div>
+      <div class="msg ai">Xin chào! Mình là trợ lý AI. Bạn hãy gửi bài tập cần hỏi, mình sẽ <strong>phân tích hướng tư duy</strong> và cung cấp <strong>lời giải chi tiết</strong> cho bạn nhé!</div>
     </div>
     <div class="chat-input-area">
       <input type="text" id="chat-input" placeholder="Nhập câu hỏi hoặc đề bài..." onkeypress="if(event.key==='Enter') sendAI()">
       <button class="chat-send-btn" onclick="sendAI()"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
   </div>
+
+  <!-- Footers Chuyên Nghiệp & Tinh Gọn -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
+        <span>© 2026 <strong>EduSpace</strong>. Tất cả quyền được bảo lưu. Hệ thống đã bật chế độ bảo mật nội dung.</span>
+      </div>
+      <div class="footer-right">
+        <a href="#teacher-contact">Hỗ trợ</a>
+        <a href="javascript:void(0)" onclick="alert('Nội dung trang web được bảo vệ bản quyền.')">Điều khoản</a>
+      </div>
+    </div>
+  </footer>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxl_OWvL5WbyznHCU9N2GgiiBcG-lUT1XhWpz8MrElxux1NWjjagfc291oJlxPgZVTqzg/exec";
@@ -280,13 +393,26 @@
     let docsData = [];
     let testsData = {};
 
+    // 🔒 KHÓA BẢO MẬT & CHỐNG SAO CHÉP
+    document.addEventListener('keydown', function(e) {
+      // Chặn F12
+      if (e.keyCode === 123) { e.preventDefault(); return false; }
+      // Chặn Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        e.preventDefault(); return false;
+      }
+      // Chặn Ctrl+U (Xem nguồn trang), Ctrl+S (Lưu trang), Ctrl+C (Copy), Ctrl+P (In trang)
+      if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 80)) {
+        e.preventDefault(); return false;
+      }
+    });
+
     // Khởi chạy ứng dụng
     async function init() {
       renderSkeletons('grid-docs');
       renderSkeletons('grid-tests');
 
       try {
-        // Tải dữ liệu song song
         const [resDocs, resTests] = await Promise.all([
           fetch(`${API_URL}?action=getDocuments`).then(r => r.json()),
           fetch(`${API_URL}?action=getTests`).then(r => r.json())
@@ -298,7 +424,7 @@
         updateClassSelectOptions();
         renderContent();
       } catch (e) {
-        console.error("Lỗi khi kết nối dữ liệu:", e);
+        console.error("Lỗi kết nối:", e);
         showError('grid-docs', 'Không thể tải dữ liệu. Vui lòng thử lại sau!');
       }
     }
@@ -321,7 +447,6 @@
       renderContent();
     }
 
-    // Cập nhật danh sách Lớp học trong Dropdown
     function updateClassSelectOptions() {
       const select = document.getElementById('class-select');
       const prevValue = select.value;
@@ -347,7 +472,6 @@
     function handleClassChange() { renderContent(); }
     function handleSearch() { renderContent(); }
 
-    // Hiển thị nội dung danh sách Tài liệu / Bài kiểm tra
     function renderContent() {
       const selectedClass = document.getElementById('class-select').value;
       const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
@@ -445,12 +569,11 @@
       return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
     }
 
-    // Chatbot Toggle
     function toggleChat() {
       document.getElementById('chat-widget').classList.toggle('open');
     }
 
-    // Gửi câu hỏi cho AI Groq
+    // 🧠 GỬI CÂU HỎI VỚI LUỒNG TƯ DUY 2 BƯỚC CỦA AI
     async function sendAI() {
       const input = document.getElementById('chat-input');
       const question = input.value.trim();
@@ -462,13 +585,20 @@
       body.scrollTop = body.scrollHeight;
 
       const loadingId = 'ai-loading-' + Date.now();
-      body.innerHTML += `<div class="msg ai" id="${loadingId}"><i class="fa-solid fa-spinner fa-spin"></i> AI đang suy nghĩ...</div>`;
+      body.innerHTML += `<div class="msg ai" id="${loadingId}"><i class="fa-solid fa-spinner fa-spin"></i> AI đang phân tích & giải bài...</div>`;
       body.scrollTop = body.scrollHeight;
+
+      // Nhúng Prompt cấu trúc tư duy vào câu hỏi gửi cho Groq
+      const structuredPrompt = `Hãy giải bài tập sau theo đúng 2 phần rõ ràng:
+1. [HƯỚNG TƯ DUY & PHÂN TÍCH]: Nêu dạng bài, công thức/kiến thức áp dụng và các bước suy luận chính để hướng dẫn học sinh hiểu bản chất.
+2. [LỜI GIẢI CHI TIẾT]: Trình bày từng bước giải toán/bài tập chi tiết, rõ ràng và kết luận đáp án.
+
+Đề bài: ${question}`;
 
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: 'askAI', question: question })
+          body: JSON.stringify({ action: 'askAI', question: structuredPrompt })
         });
         const json = await res.json();
         document.getElementById(loadingId).innerText = json.reply || "Không có phản hồi từ AI.";
@@ -478,7 +608,6 @@
       body.scrollTop = body.scrollHeight;
     }
 
-    // Tải dữ liệu ban đầu
     init();
   </script>
 </body>
