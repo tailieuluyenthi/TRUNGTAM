@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kênh Học Tập & Bài Tập Trực Tuyến</title>
-  <!-- Google Fonts & Font Awesome Icons -->
+  <title>Kênh Học Tập & Bảng Vinh Danh Trực Tuyến</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -21,594 +20,272 @@
       --text-muted: #64748b;
       --border: #e2e8f0;
       --radius: 16px;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
 
-    /* BẢO MẬT: Chặn chọn văn bản / bôi đen toàn trang */
     * {
       box-sizing: border-box; margin: 0; padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      -webkit-user-select: none; user-select: none;
     }
 
     body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* Header & Navigation */
     header {
-      background: rgba(255, 255, 255, 0.9);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.9); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
     }
     .header-container {
       max-width: 1200px; margin: 0 auto; padding: 14px 24px;
       display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
     }
     .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.25rem; color: var(--primary); }
-    .logo i { font-size: 1.5rem; }
 
-    .nav-tabs { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
+    .nav-tabs { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); gap: 4px; }
     .tab-btn {
-      padding: 8px 16px; border: none; background: transparent;
-      color: var(--text-muted); font-weight: 600; font-size: 0.88rem;
-      border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+      padding: 8px 16px; border: none; background: transparent; color: var(--text-muted);
+      font-weight: 600; font-size: 0.88rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;
       display: flex; align-items: center; gap: 6px; text-decoration: none;
     }
     .tab-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-    /* TRANG BÌA (Hero Banner) */
-    .hero-banner {
-      max-width: 1200px; width: 100%; margin: 24px auto 0; padding: 0 24px;
-    }
-    .hero-card {
-      position: relative; border-radius: var(--radius); overflow: hidden;
-      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
-      color: white; box-shadow: var(--shadow); display: flex; align-items: center; min-height: 220px;
-    }
-    .hero-img {
-      position: absolute; right: 0; top: 0; width: 50%; height: 100%;
-      object-fit: cover; opacity: 0.35; mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-      pointer-events: none;
-    }
-    .hero-content {
-      position: relative; z-index: 2; padding: 36px 40px; max-width: 650px;
-    }
-    .hero-content h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
-    .hero-content p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
-
-    /* Main Container */
     main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 24px; flex: 1; }
 
-    /* Controls Bar (Filter & Search) */
-    .controls-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
-    }
-    .class-filter { display: flex; align-items: center; gap: 12px; }
-    .class-filter label { font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
-    .select-wrapper { position: relative; }
-    select {
-      appearance: none; background: var(--surface); border: 1px solid var(--border);
-      padding: 10px 40px 10px 16px; border-radius: 10px; font-weight: 600;
-      color: var(--text); font-size: 0.95rem; cursor: pointer; outline: none;
-      transition: border-color 0.2s; min-width: 180px;
-    }
-    select:focus { border-color: var(--primary); }
-    .select-wrapper::after {
-      content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); pointer-events: none;
-    }
-
-    .search-box { position: relative; flex: 1; max-width: 320px; }
-    .search-box input {
-      width: 100%; padding: 10px 16px 10px 40px; border-radius: 10px;
-      border: 1px solid var(--border); outline: none; font-size: 0.9rem;
-      background: var(--surface); transition: all 0.2s;
-    }
-    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-
-    /* Grid & Cards */
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    .card-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
+    /* BẢNG VINH DANH UI */
+    .leaderboard-header {
+      text-align: center; margin-bottom: 32px;
     }
-    .card {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;
-    }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08); }
-    .card-icon {
-      width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light);
-      color: var(--primary); display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem; margin-bottom: 16px;
-    }
-    .card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; line-height: 1.4; color: var(--text); }
-    .card-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
-    .btn-action {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 10px; border-radius: 10px; background: var(--primary);
-      color: white; font-weight: 600; text-decoration: none; font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-    .btn-action:hover { background: var(--primary-hover); }
+    .leaderboard-header h2 { font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .leaderboard-header p { color: var(--text-muted); font-size: 0.95rem; }
 
-    /* LIÊN HỆ TRỰC TIẾP GIÁO VIÊN */
-    .teacher-contact-section {
-      margin-top: 48px; background: var(--surface); border-radius: var(--radius);
-      padding: 28px 32px; border: 1px solid var(--border); box-shadow: var(--shadow);
-      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    .class-pills { display: flex; justify-content: center; gap: 12px; margin-bottom: 32px; }
+    .pill-btn {
+      padding: 10px 24px; border-radius: 20px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text-muted); font-weight: 700; cursor: pointer; transition: all 0.2s;
     }
-    .contact-info-text h3 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-    .contact-info-text p { font-size: 0.9rem; color: var(--text-muted); }
-    .contact-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn-contact {
-      padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600;
-      font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, opacity 0.2s;
-    }
-    .btn-contact:hover { transform: translateY(-2px); opacity: 0.95; }
-    .btn-zalo { background: #0068ff; color: white; }
-    .btn-fb { background: #1877f2; color: white; }
-    .btn-phone { background: #10b981; color: white; }
+    .pill-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
 
-    /* Empty & Skeleton States */
-    .empty-state {
-      text-align: center; padding: 60px 20px; background: var(--surface);
-      border-radius: var(--radius); border: 1px dashed var(--border); grid-column: 1 / -1;
+    /* PODIUM TOP 3 */
+    .podium-container {
+      display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;
     }
-    .empty-state i { font-size: 3rem; color: var(--text-muted); margin-bottom: 16px; opacity: 0.5; }
-    .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; }
-    .empty-state p { color: var(--text-muted); font-size: 0.9rem; }
+    .podium-card {
+      background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
+      padding: 24px 16px; text-align: center; width: 220px; box-shadow: var(--shadow); position: relative;
+    }
+    .podium-card.rank-1 { order: 2; border: 2px solid #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); transform: scale(1.08); }
+    .podium-card.rank-2 { order: 1; border: 2px solid #94a3b8; }
+    .podium-card.rank-3 { order: 3; border: 2px solid #b45309; }
 
-    .skeleton {
-      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-      background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 8px;
+    .badge-icon {
+      width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white;
     }
-    @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .rank-1 .badge-icon { background: #f59e0b; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); }
+    .rank-2 .badge-icon { background: #94a3b8; }
+    .rank-3 .badge-icon { background: #b45309; }
 
-    /* Floating Chatbot Widget */
-    .chat-toggle-btn {
-      position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
-      border-radius: 30px; background: var(--primary); color: white; border: none;
-      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-      transition: transform 0.2s, background 0.2s; z-index: 999;
-    }
-    .chat-toggle-btn:hover { transform: scale(1.08); background: var(--primary-hover); }
+    .student-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: var(--text); }
+    .student-score { font-weight: 800; font-size: 1.2rem; color: var(--primary); margin-bottom: 4px; }
+    .student-code { font-size: 0.8rem; color: var(--text-muted); }
 
-    .chat-widget {
-      position: fixed; bottom: 96px; right: 24px; width: 400px; height: 540px;
-      max-width: calc(100vw - 48px); max-height: calc(100vh - 120px);
-      background: var(--surface); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-      border: 1px solid var(--border); display: flex; flex-direction: column;
-      overflow: hidden; z-index: 998; opacity: 0; transform: translateY(20px) scale(0.95);
-      pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    /* LEADERBOARD TABLE */
+    .table-container {
+      background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
+      box-shadow: var(--shadow); overflow: hidden;
     }
-    .chat-widget.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 14px 20px; font-size: 0.9rem; }
+    th { background: #f1f5f9; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border); }
+    td { border-bottom: 1px solid var(--border); color: var(--text); }
+    tr:last-child td { border-bottom: none; }
+    .rank-num { font-weight: 800; color: var(--primary); width: 60px; text-align: center; }
 
-    .chat-header {
-      background: var(--primary); color: white; padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .chat-header-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; }
-    .chat-close-btn { background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; opacity: 0.8; }
-    .chat-close-btn:hover { opacity: 1; }
+    /* FOOTER */
+    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 20px 24px; margin-top: auto; }
+    .footer-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
 
-    .chat-body {
-      flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
-      background: #f8fafc;
-    }
-    .msg {
-      max-width: 88%; padding: 12px 16px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5;
-      word-wrap: break-word; white-space: pre-wrap;
-    }
-    .msg.user {
-      align-self: flex-end; background: var(--primary); color: white;
-      border-bottom-right-radius: 4px;
-    }
-    .msg.ai {
-      align-self: flex-start; background: var(--surface); color: var(--text);
-      border: 1px solid var(--border); border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    .chat-input-area {
-      padding: 12px 16px; background: var(--surface); border-top: 1px solid var(--border);
-      display: flex; gap: 8px; align-items: center;
-    }
-    .chat-input-area input {
-      flex: 1; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-      outline: none; font-size: 0.9rem; background: var(--bg);
-    }
-    .chat-input-area input:focus { border-color: var(--primary); background: var(--surface); }
-    .chat-send-btn {
-      width: 40px; height: 40px; border-radius: 10px; background: var(--primary);
-      color: white; border: none; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; transition: background 0.2s;
-    }
-    .chat-send-btn:hover { background: var(--primary-hover); }
-
-    /* CHÂN TRANG (Footer Chuyên Nghiệp & Gọn Gàng) */
-    footer {
-      background: var(--surface); border-top: 1px solid var(--border);
-      padding: 20px 24px; margin-top: auto;
-    }
-    .footer-container {
-      max-width: 1200px; margin: 0 auto; display: flex;
-      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    .footer-left { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
-    .footer-left strong { color: var(--text); }
-    .footer-right { display: flex; gap: 16px; font-size: 0.85rem; }
-    .footer-right a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    .footer-right a:hover { color: var(--primary); }
-
-    /* Responsive */
-    @media (max-width: 640px) {
-      .header-container { flex-direction: column; align-items: stretch; }
-      .nav-tabs { width: 100%; justify-content: center; flex-wrap: wrap; }
-      .hero-content { padding: 24px; }
-      .hero-content h1 { font-size: 1.4rem; }
-      .controls-bar { flex-direction: column; align-items: stretch; }
-      .search-box { max-width: 100%; }
-      .teacher-contact-section { flex-direction: column; align-items: stretch; text-align: center; }
-      .contact-buttons { justify-content: center; }
-      .chat-widget { right: 16px; bottom: 88px; width: calc(100vw - 32px); }
-      .footer-container { flex-direction: column; text-align: center; }
+    @media (max-width: 768px) {
+      .podium-container { flex-direction: column; align-items: center; }
+      .podium-card.rank-1 { order: 1; transform: none; width: 100%; }
+      .podium-card.rank-2 { order: 2; width: 100%; }
+      .podium-card.rank-3 { order: 3; width: 100%; }
     }
   </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;">
 
-  <!-- Header Navigation -->
   <header>
     <div class="header-container">
-      <div class="logo">
-        <i class="fa-solid fa-graduation-cap"></i>
-        <span>EduSpace</span>
-      </div>
+      <div class="logo"><i class="fa-solid fa-graduation-cap"></i> <span>EduSpace</span></div>
       <nav class="nav-tabs">
-        <button id="btn-docs" class="tab-btn active" onclick="switchTab('docs')">
-          <i class="fa-solid fa-folder-open"></i> Tài liệu & Bài tập
-        </button>
-        <button id="btn-tests" class="tab-btn" onclick="switchTab('tests')">
-          <i class="fa-solid fa-pen-to-square"></i> Bài kiểm tra Online
-        </button>
-        <a href="#teacher-contact" class="tab-btn">
-          <i class="fa-solid fa-headset"></i> Hỏi bài Giáo viên
-        </a>
+        <button id="btn-docs" class="tab-btn active" onclick="switchTab('docs')"><i class="fa-solid fa-folder-open"></i> Tài liệu</button>
+        <button id="btn-tests" class="tab-btn" onclick="switchTab('tests')"><i class="fa-solid fa-pen-to-square"></i> Kiểm tra</button>
+        <button id="btn-leaderboard" class="tab-btn" onclick="switchTab('leaderboard')"><i class="fa-solid fa-trophy"></i> Bảng Vinh Danh</button>
       </nav>
     </div>
   </header>
 
-  <!-- TRANG BÌA (HERO BANNER) -->
-  <section class="hero-banner">
-    <div class="hero-card">
-      <!-- Ảnh bìa placeholder (Bạn có thể thay link ảnh ở thẻ src bên dưới bất kỳ lúc nào) -->
-      <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" alt="Ảnh Bìa Lớp Học" class="hero-img" id="hero-cover-img">
-      <div class="hero-content">
-        <h1>Cổng Thông Tin Học Tập & Ôn Luyện</h1>
-        <p>Hệ thống tự động cập nhật tài liệu, kho bài tập và đề kiểm tra trực tuyến. Hỗ trợ giải bài 24/7 với Trợ lý AI thông minh.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content -->
   <main>
-    <!-- Controls Bar -->
-    <div class="controls-bar">
-      <div class="class-filter">
-        <label for="class-select"><i class="fa-solid fa-filter"></i> Lớp học:</label>
-        <div class="select-wrapper">
-          <select id="class-select" onchange="handleClassChange()">
-            <option value="">Đang tải danh sách...</option>
-          </select>
-        </div>
-      </div>
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Tìm kiếm tài liệu, bài tập..." oninput="handleSearch()">
-      </div>
-    </div>
-
-    <!-- Panel 1: Tài liệu & Bài tập -->
+    <!-- Tab Tài liệu & Bài kiểm tra giữ nguyên -->
     <div id="panel-docs" class="tab-panel active">
-      <div id="grid-docs" class="card-grid"></div>
+      <p style="text-align: center; color: var(--text-muted);">Đang hiển thị trang Tài liệu & Bài tập</p>
     </div>
 
-    <!-- Panel 2: Bài kiểm tra -->
     <div id="panel-tests" class="tab-panel">
-      <div id="grid-tests" class="card-grid"></div>
+      <p style="text-align: center; color: var(--text-muted);">Đang hiển thị trang Bài kiểm tra Online</p>
     </div>
 
-    <!-- BỘ PHẬN LIÊN HỆ TRỰC TIẾP GIÁO VIÊN -->
-    <section class="teacher-contact-section" id="teacher-contact">
-      <div class="contact-info-text">
-        <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--primary);"></i> Cần Hỏi Bài Trực Tiếp Với Giáo Viên?</h3>
-        <p>Nếu câu hỏi phức tạp hoặc AI chưa giải đáp thỏa đáng, hãy gửi tin nhắn trực tiếp cho Thầy/Cô.</p>
+    <!-- TAB BẢNG VINH DANH MỚI -->
+    <div id="panel-leaderboard" class="tab-panel">
+      <div class="leaderboard-header">
+        <h2><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> BẢNG VINH DANH HỌC SINH EXCELLENT</h2>
+        <p>Cập nhật tự động kết quả bài kiểm tra và vinh danh những cá nhân có thành tích xuất sắc nhất</p>
       </div>
-      <div class="contact-buttons">
-        <a href="https://zalo.me" target="_blank" class="btn-contact btn-zalo">
-          <i class="fa-solid fa-comment"></i> Nhắn Zalo
-        </a>
-        <a href="https://facebook.com" target="_blank" class="btn-contact btn-fb">
-          <i class="fa-brands fa-facebook"></i> Facebook
-        </a>
-        <a href="tel:0123456789" class="btn-contact btn-phone">
-          <i class="fa-solid fa-phone"></i> Gọi Điện
-        </a>
+
+      <!-- Chọn khối lớp -->
+      <div class="class-pills">
+        <button class="pill-btn active" onclick="filterClass('Lớp 10')">Lớp 10</button>
+        <button class="pill-btn" onclick="filterClass('Lớp 11')">Lớp 11</button>
+        <button class="pill-btn" onclick="filterClass('Lớp 12')">Lớp 12</button>
       </div>
-    </section>
+
+      <!-- Khung Top 3 Podium -->
+      <div class="podium-container" id="podium-area"></div>
+
+      <!-- Bảng danh sách đầy đủ -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank-num">STT</th>
+              <th>Họ & Tên</th>
+              <th>Mã Đề Thi</th>
+              <th>Điểm Số</th>
+              <th>Thời Gian Nộp</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-table-body"></tbody>
+        </table>
+      </div>
+    </div>
   </main>
 
-  <!-- Floating Chatbot Widget -->
-  <button class="chat-toggle-btn" onclick="toggleChat()">
-    <i class="fa-solid fa-robot"></i>
-  </button>
-
-  <div class="chat-widget" id="chat-widget">
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <i class="fa-solid fa-bolt"></i>
-        <span>Trợ Lý Giải Bài AI (Phân Tích & Chi Tiết)</span>
-      </div>
-      <button class="chat-close-btn" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="chat-body" id="chat-body">
-      <div class="msg ai">Xin chào! Mình là trợ lý AI. Bạn hãy gửi bài tập cần hỏi, mình sẽ <strong>phân tích hướng tư duy</strong> và cung cấp <strong>lời giải chi tiết</strong> cho bạn nhé!</div>
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Nhập câu hỏi hoặc đề bài..." onkeypress="if(event.key==='Enter') sendAI()">
-      <button class="chat-send-btn" onclick="sendAI()"><i class="fa-solid fa-paper-plane"></i></button>
-    </div>
-  </div>
-
-  <!-- Footers Chuyên Nghiệp & Tinh Gọn -->
   <footer>
     <div class="footer-container">
-      <div class="footer-left">
-        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
-        <span>© 2026 <strong>EduSpace</strong>. Tất cả quyền được bảo lưu. Hệ thống đã bật chế độ bảo mật nội dung.</span>
-      </div>
-      <div class="footer-right">
-        <a href="#teacher-contact">Hỗ trợ</a>
-        <a href="javascript:void(0)" onclick="alert('Nội dung trang web được bảo vệ bản quyền.')">Điều khoản</a>
-      </div>
+      <span>© 2026 EduSpace. Hệ thống tự động cập nhật Bảng Vinh Danh.</span>
     </div>
   </footer>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxl_OWvL5WbyznHCU9N2GgiiBcG-lUT1XhWpz8MrElxux1NWjjagfc291oJlxPgZVTqzg/exec";
 
-    let currentTab = 'docs';
-    let docsData = [];
-    let testsData = {};
+    let leaderboardData = { "Lớp 10": [], "Lớp 11": [], "Lớp 12": [] };
+    let currentSelectedClass = "Lớp 10";
 
-    // 🔒 KHÓA BẢO MẬT & CHỐNG SAO CHÉP
-    document.addEventListener('keydown', function(e) {
-      // Chặn F12
-      if (e.keyCode === 123) { e.preventDefault(); return false; }
-      // Chặn Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-        e.preventDefault(); return false;
-      }
-      // Chặn Ctrl+U (Xem nguồn trang), Ctrl+S (Lưu trang), Ctrl+C (Copy), Ctrl+P (In trang)
-      if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 80)) {
+    // Chặn phím tắt
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && [73,74,67].includes(e.keyCode)) || (e.ctrlKey && [85,83,67,80].includes(e.keyCode))) {
         e.preventDefault(); return false;
       }
     });
 
-    // Khởi chạy ứng dụng
-    async function init() {
-      renderSkeletons('grid-docs');
-      renderSkeletons('grid-tests');
-
-      try {
-        const [resDocs, resTests] = await Promise.all([
-          fetch(`${API_URL}?action=getDocuments`).then(r => r.json()),
-          fetch(`${API_URL}?action=getTests`).then(r => r.json())
-        ]);
-
-        if (resDocs.status === 'success') docsData = resDocs.data || [];
-        if (resTests.status === 'success') testsData = resTests.data || {};
-
-        updateClassSelectOptions();
-        renderContent();
-      } catch (e) {
-        console.error("Lỗi kết nối:", e);
-        showError('grid-docs', 'Không thể tải dữ liệu. Vui lòng thử lại sau!');
-      }
-    }
-
-    // Chuyển Tab
     function switchTab(tab) {
-      currentTab = tab;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
 
-      if (tab === 'docs') {
-        document.getElementById('btn-docs').classList.add('active');
-        document.getElementById('panel-docs').classList.add('active');
-      } else {
-        document.getElementById('btn-tests').classList.add('active');
-        document.getElementById('panel-tests').classList.add('active');
-      }
+      document.getElementById(`btn-${tab}`).classList.add('active');
+      document.getElementById(`panel-${tab}`).classList.add('active');
 
-      updateClassSelectOptions();
-      renderContent();
+      if (tab === 'leaderboard') {
+        loadLeaderboardData();
+      }
     }
 
-    function updateClassSelectOptions() {
-      const select = document.getElementById('class-select');
-      const prevValue = select.value;
+    async function loadLeaderboardData() {
+      try {
+        const res = await fetch(`${API_URL}?action=getLeaderboard`).then(r => r.json());
+        if (res.status === 'success') {
+          leaderboardData = res.data;
+          renderLeaderboard();
+        }
+      } catch (e) {
+        console.error("Lỗi kết nối bảng vinh danh:", e);
+      }
+    }
 
-      let classes = [];
-      if (currentTab === 'docs') {
-        classes = docsData.map(d => d.className);
-      } else {
-        classes = Object.keys(testsData);
+    function filterClass(className) {
+      currentSelectedClass = className;
+      document.querySelectorAll('.pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === className);
+      });
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const list = leaderboardData[currentSelectedClass] || [];
+      const podiumArea = document.getElementById('podium-area');
+      const tableBody = document.getElementById('leaderboard-table-body');
+
+      // 1. Render Top 3 Podium
+      const top1 = list[0];
+      const top2 = list[1];
+      const top3 = list[2];
+
+      let podiumHTML = '';
+      if (top2) {
+        podiumHTML += `
+          <div class="podium-card rank-2">
+            <div class="badge-icon"><i class="fa-solid fa-medal"></i></div>
+            <div class="student-name">${escapeHtml(top2.hoTen)}</div>
+            <div class="student-score">${escapeHtml(top2.diemText)}</div>
+            <div class="student-code">${escapeHtml(top2.maDe)}</div>
+          </div>`;
+      }
+      if (top1) {
+        podiumHTML += `
+          <div class="podium-card rank-1">
+            <div class="badge-icon"><i class="fa-solid fa-trophy"></i></div>
+            <div class="student-name">${escapeHtml(top1.hoTen)}</div>
+            <div class="student-score">${escapeHtml(top1.diemText)}</div>
+            <div class="student-code">${escapeHtml(top1.maDe)}</div>
+          </div>`;
+      }
+      if (top3) {
+        podiumHTML += `
+          <div class="podium-card rank-3">
+            <div class="badge-icon"><i class="fa-solid fa-award"></i></div>
+            <div class="student-name">${escapeHtml(top3.hoTen)}</div>
+            <div class="student-score">${escapeHtml(top3.diemText)}</div>
+            <div class="student-code">${escapeHtml(top3.maDe)}</div>
+          </div>`;
       }
 
-      if (classes.length === 0) {
-        select.innerHTML = '<option value="">Không có lớp nào</option>';
+      podiumArea.innerHTML = podiumHTML || '<p style="color: var(--text-muted);">Chưa có dữ liệu cho lớp này</p>';
+
+      // 2. Render Bảng danh sách đầy đủ
+      if (list.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Không có dữ liệu học sinh</td></tr>`;
         return;
       }
 
-      select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
-      if (classes.includes(prevValue)) {
-        select.value = prevValue;
-      }
-    }
-
-    function handleClassChange() { renderContent(); }
-    function handleSearch() { renderContent(); }
-
-    function renderContent() {
-      const selectedClass = document.getElementById('class-select').value;
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-
-      if (currentTab === 'docs') {
-        const grid = document.getElementById('grid-docs');
-        const classObj = docsData.find(d => d.className === selectedClass);
-        let files = classObj ? classObj.files : [];
-
-        if (searchQuery) {
-          files = files.filter(f => f.name.toLowerCase().includes(searchQuery));
-        }
-
-        if (files.length === 0) {
-          renderEmptyState(grid, 'Chưa có tài liệu hoặc bài tập nào trong thư mục này.');
-          return;
-        }
-
-        grid.innerHTML = files.map(f => `
-          <div class="card">
-            <div>
-              <div class="card-icon"><i class="fa-regular fa-file-lines"></i></div>
-              <div class="card-title">${escapeHtml(f.name)}</div>
-              <div class="card-meta"><i class="fa-solid fa-folder"></i> ${escapeHtml(selectedClass)}</div>
-            </div>
-            <a href="${f.url}" target="_blank" class="btn-action">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Xem & Tải về
-            </a>
-          </div>
-        `).join('');
-
-      } else {
-        const grid = document.getElementById('grid-tests');
-        let tests = testsData[selectedClass] || [];
-
-        if (searchQuery) {
-          tests = tests.filter(t => t.name.toLowerCase().includes(searchQuery));
-        }
-
-        if (tests.length === 0) {
-          renderEmptyState(grid, 'Chưa có bài kiểm tra online nào cho lớp này.');
-          return;
-        }
-
-        grid.innerHTML = tests.map(t => `
-          <div class="card">
-            <div>
-              <div class="card-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-laptop-code"></i></div>
-              <div class="card-title">${escapeHtml(t.name)}</div>
-              <div class="card-meta"><i class="fa-solid fa-clock"></i> Kiểm tra Trực tuyến</div>
-            </div>
-            <a href="${t.url}" target="_blank" class="btn-action" style="background: #d97706;">
-              <i class="fa-solid fa-play"></i> Làm bài ngay
-            </a>
-          </div>
-        `).join('');
-      }
-    }
-
-    // UI Helpers
-    function renderSkeletons(containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = Array(4).fill(0).map(() => `
-        <div class="card" style="height: 200px;">
-          <div class="skeleton" style="width: 48px; height: 48px; border-radius: 12px; margin-bottom: 16px;"></div>
-          <div class="skeleton" style="width: 80%; height: 20px; margin-bottom: 12px;"></div>
-          <div class="skeleton" style="width: 40%; height: 14px; margin-bottom: 24px;"></div>
-          <div class="skeleton" style="width: 100%; height: 40px; border-radius: 10px;"></div>
-        </div>
+      tableBody.innerHTML = list.map((item, index) => `
+        <tr>
+          <td class="rank-num">#${index + 1}</td>
+          <td><strong>${escapeHtml(item.hoTen)}</strong></td>
+          <td>${escapeHtml(item.maDe)}</td>
+          <td><strong style="color: var(--primary);">${escapeHtml(item.diemText)}</strong></td>
+          <td>${escapeHtml(item.thoiGian)}</td>
+        </tr>
       `).join('');
     }
 
-    function renderEmptyState(container, message) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fa-regular fa-folder-open"></i>
-          <h3>Không tìm thấy dữ liệu</h3>
-          <p>${message}</p>
-        </div>
-      `;
-    }
-
-    function showError(containerId, message) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i>
-          <h3>Đã xảy ra lỗi</h3>
-          <p>${message}</p>
-        </div>
-      `;
-    }
-
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+      return (str || '').toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
     }
-
-    function toggleChat() {
-      document.getElementById('chat-widget').classList.toggle('open');
-    }
-
-    // 🧠 GỬI CÂU HỎI VỚI LUỒNG TƯ DUY 2 BƯỚC CỦA AI
-    async function sendAI() {
-      const input = document.getElementById('chat-input');
-      const question = input.value.trim();
-      if (!question) return;
-
-      const body = document.getElementById('chat-body');
-      body.innerHTML += `<div class="msg user">${escapeHtml(question)}</div>`;
-      input.value = '';
-      body.scrollTop = body.scrollHeight;
-
-      const loadingId = 'ai-loading-' + Date.now();
-      body.innerHTML += `<div class="msg ai" id="${loadingId}"><i class="fa-solid fa-spinner fa-spin"></i> AI đang phân tích & giải bài...</div>`;
-      body.scrollTop = body.scrollHeight;
-
-      // Nhúng Prompt cấu trúc tư duy vào câu hỏi gửi cho Groq
-      const structuredPrompt = `Hãy giải bài tập sau theo đúng 2 phần rõ ràng:
-1. [HƯỚNG TƯ DUY & PHÂN TÍCH]: Nêu dạng bài, công thức/kiến thức áp dụng và các bước suy luận chính để hướng dẫn học sinh hiểu bản chất.
-2. [LỜI GIẢI CHI TIẾT]: Trình bày từng bước giải toán/bài tập chi tiết, rõ ràng và kết luận đáp án.
-
-Đề bài: ${question}`;
-
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'askAI', question: structuredPrompt })
-        });
-        const json = await res.json();
-        document.getElementById(loadingId).innerText = json.reply || "Không có phản hồi từ AI.";
-      } catch (e) {
-        document.getElementById(loadingId).innerText = "Lỗi kết nối AI!";
-      }
-      body.scrollTop = body.scrollHeight;
-    }
-
-    init();
   </script>
 </body>
 </html>
