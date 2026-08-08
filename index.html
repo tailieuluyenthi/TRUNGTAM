@@ -1,732 +1,460 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kênh Học Tập & Bảng Vinh Danh Trực Tuyến</title>
-  <!-- Google Fonts & Font Awesome Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --primary-light: #e0e7ff;
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --radius: 16px;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    }
-
-    /* BẢO MẬT: Chặn bôi đen / chọn văn bản toàn trang */
-    * {
-      box-sizing: border-box; margin: 0; padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-
-    /* Header & Navigation */
-    header {
-      background: rgba(255, 255, 255, 0.95);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-    .header-container {
-      max-width: 1200px; margin: 0 auto; padding: 14px 24px;
-      display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
-    }
-    .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.25rem; color: var(--primary); }
-    .logo i { font-size: 1.5rem; }
-
-    .nav-tabs { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); gap: 4px; }
-    .tab-btn {
-      padding: 8px 16px; border: none; background: transparent;
-      color: var(--text-muted); font-weight: 600; font-size: 0.88rem;
-      border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
-      display: flex; align-items: center; gap: 6px; text-decoration: none;
-    }
-    .tab-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-    /* HERO BANNER (TRANG BÌA) */
-    .hero-banner {
-      max-width: 1200px; width: 100%; margin: 24px auto 0; padding: 0 24px;
-    }
-    .hero-card {
-      position: relative; border-radius: var(--radius); overflow: hidden;
-      background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
-      color: white; box-shadow: var(--shadow); display: flex; align-items: center; min-height: 200px;
-    }
-    .hero-img {
-      position: absolute; right: 0; top: 0; width: 50%; height: 100%;
-      object-fit: cover; opacity: 0.3; mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));
-      pointer-events: none;
-    }
-    .hero-content { position: relative; z-index: 2; padding: 32px 36px; max-width: 650px; }
-    .hero-content h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; line-height: 1.3; }
-    .hero-content p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
-
-    /* Main Container */
-    main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 28px 24px; flex: 1; }
-
-    /* Controls Bar (Filter & Search) */
-    .controls-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
-    }
-    .class-filter { display: flex; align-items: center; gap: 12px; }
-    .class-filter label { font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
-    .select-wrapper { position: relative; }
-    select {
-      appearance: none; background: var(--surface); border: 1px solid var(--border);
-      padding: 10px 40px 10px 16px; border-radius: 10px; font-weight: 600;
-      color: var(--text); font-size: 0.95rem; cursor: pointer; outline: none;
-      transition: border-color 0.2s; min-width: 180px;
-    }
-    select:focus { border-color: var(--primary); }
-    .select-wrapper::after {
-      content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); pointer-events: none;
-    }
-
-    .search-box { position: relative; flex: 1; max-width: 320px; }
-    .search-box input {
-      width: 100%; padding: 10px 16px 10px 40px; border-radius: 10px;
-      border: 1px solid var(--border); outline: none; font-size: 0.9rem;
-      background: var(--surface); transition: all 0.2s;
-    }
-    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-
-    /* Panels & Card Grid */
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    .card-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
-    }
-    .card {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;
-    }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08); }
-    .card-icon {
-      width: 48px; height: 48px; border-radius: 12px; background: var(--primary-light);
-      color: var(--primary); display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem; margin-bottom: 16px;
-    }
-    .card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; line-height: 1.4; color: var(--text); }
-    .card-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
-    .btn-action {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      width: 100%; padding: 10px; border-radius: 10px; background: var(--primary);
-      color: white; font-weight: 600; text-decoration: none; font-size: 0.9rem;
-      transition: background 0.2s;
-    }
-    .btn-action:hover { background: var(--primary-hover); }
-
-    /* BẢNG VINH DANH (LEADERBOARD) UI */
-    .leaderboard-header { text-align: center; margin-bottom: 28px; }
-    .leaderboard-header h2 { font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-    .leaderboard-header p { color: var(--text-muted); font-size: 0.95rem; }
-
-    .class-pills { display: flex; justify-content: center; gap: 12px; margin-bottom: 32px; }
-    .pill-btn {
-      padding: 10px 24px; border-radius: 20px; border: 1px solid var(--border);
-      background: var(--surface); color: var(--text-muted); font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .pill-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
-
-    /* PODIUM TOP 3 */
-    .podium-container {
-      display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;
-    }
-    .podium-card {
-      background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
-      padding: 24px 16px; text-align: center; width: 220px; box-shadow: var(--shadow); position: relative;
-    }
-    .podium-card.rank-1 { border: 2px solid #f59e0b; background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); transform: scale(1.08); z-index: 2; }
-    .podium-card.rank-2 { border: 2px solid #94a3b8; }
-    .podium-card.rank-3 { border: 2px solid #b45309; }
-
-    .badge-icon {
-      width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white;
-    }
-    .rank-1 .badge-icon { background: #f59e0b; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4); }
-    .rank-2 .badge-icon { background: #94a3b8; }
-    .rank-3 .badge-icon { background: #b45309; }
-
-    .student-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: var(--text); }
-    .student-score { font-weight: 800; font-size: 1.25rem; color: var(--primary); margin-bottom: 4px; }
-    .student-code { font-size: 0.8rem; color: var(--text-muted); }
-
-    /* LEADERBOARD TABLE */
-    .table-container {
-      background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border);
-      box-shadow: var(--shadow); overflow-x: auto;
-    }
-    table { width: 100%; border-collapse: collapse; text-align: left; min-width: 600px; }
-    th, td { padding: 14px 20px; font-size: 0.9rem; }
-    th { background: #f1f5f9; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border); }
-    td { border-bottom: 1px solid var(--border); color: var(--text); }
-    tr:last-child td { border-bottom: none; }
-    .rank-num { font-weight: 800; color: var(--primary); width: 60px; text-align: center; }
-
-    /* LIÊN HỆ TRỰC TIẾP GIÁO VIÊN */
-    .teacher-contact-section {
-      margin-top: 48px; background: var(--surface); border-radius: var(--radius);
-      padding: 28px 32px; border: 1px solid var(--border); box-shadow: var(--shadow);
-      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-    }
-    .contact-info-text h3 { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-    .contact-info-text p { font-size: 0.9rem; color: var(--text-muted); }
-    .contact-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn-contact {
-      padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600;
-      font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s, opacity 0.2s;
-    }
-    .btn-contact:hover { transform: translateY(-2px); opacity: 0.95; }
-    .btn-zalo { background: #0068ff; color: white; }
-    .btn-fb { background: #1877f2; color: white; }
-    .btn-phone { background: #10b981; color: white; }
-
-    /* Empty & Skeleton States */
-    .empty-state {
-      text-align: center; padding: 60px 20px; background: var(--surface);
-      border-radius: var(--radius); border: 1px dashed var(--border); grid-column: 1 / -1;
-    }
-    .empty-state i { font-size: 3rem; color: var(--text-muted); margin-bottom: 16px; opacity: 0.5; }
-    .empty-state h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 6px; }
-    .empty-state p { color: var(--text-muted); font-size: 0.9rem; }
-
-    .skeleton {
-      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-      background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; border-radius: 8px;
-    }
-    @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-    /* Floating Chatbot Widget */
-    .chat-toggle-btn {
-      position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px;
-      border-radius: 30px; background: var(--primary); color: white; border: none;
-      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
-      transition: transform 0.2s, background 0.2s; z-index: 999;
-    }
-    .chat-toggle-btn:hover { transform: scale(1.08); background: var(--primary-hover); }
-
-    .chat-widget {
-      position: fixed; bottom: 96px; right: 24px; width: 400px; height: 540px;
-      max-width: calc(100vw - 48px); max-height: calc(100vh - 120px);
-      background: var(--surface); border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-      border: 1px solid var(--border); display: flex; flex-direction: column;
-      overflow: hidden; z-index: 998; opacity: 0; transform: translateY(20px) scale(0.95);
-      pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .chat-widget.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
-
-    .chat-header {
-      background: var(--primary); color: white; padding: 16px 20px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .chat-header-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; }
-    .chat-close-btn { background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; opacity: 0.8; }
-
-    .chat-body {
-      flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
-      background: #f8fafc;
-    }
-    .msg {
-      max-width: 88%; padding: 12px 16px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5;
-      word-wrap: break-word; white-space: pre-wrap;
-    }
-    .msg.user { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 4px; }
-    .msg.ai {
-      align-self: flex-start; background: var(--surface); color: var(--text);
-      border: 1px solid var(--border); border-bottom-left-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    .chat-input-area {
-      padding: 12px 16px; background: var(--surface); border-top: 1px solid var(--border);
-      display: flex; gap: 8px; align-items: center;
-    }
-    .chat-input-area input {
-      flex: 1; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-      outline: none; font-size: 0.9rem; background: var(--bg);
-    }
-    .chat-send-btn {
-      width: 40px; height: 40px; border-radius: 10px; background: var(--primary);
-      color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
-
-    /* FOOTER */
-    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 20px 24px; margin-top: auto; }
-    .footer-container {
-      max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
-    }
-    .footer-left { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
-    .footer-right { display: flex; gap: 16px; font-size: 0.85rem; }
-    .footer-right a { color: var(--text-muted); text-decoration: none; }
-    .footer-right a:hover { color: var(--primary); }
-
-    @media (max-width: 768px) {
-      .header-container { flex-direction: column; align-items: stretch; }
-      .nav-tabs { width: 100%; justify-content: center; flex-wrap: wrap; }
-      .hero-content { padding: 24px; }
-      .hero-content h1 { font-size: 1.4rem; }
-      .controls-bar { flex-direction: column; align-items: stretch; }
-      .search-box { max-width: 100%; }
-      .teacher-contact-section { flex-direction: column; text-align: center; }
-      .contact-buttons { justify-content: center; }
-      .podium-container { flex-direction: column; align-items: center; }
-      .podium-card.rank-1 { transform: none; width: 100%; }
-      .podium-card.rank-2, .podium-card.rank-3 { width: 100%; }
-      .chat-widget { right: 16px; bottom: 88px; width: calc(100vw - 32px); }
-      .footer-container { flex-direction: column; text-align: center; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFile Hub - Khai Thác Tài Nguyên Học Tập</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
-<body oncontextmenu="return false;" ondragstart="return false;">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- Header Navigation -->
-  <header>
-    <div class="header-container">
-      <div class="logo">
-        <i class="fa-solid fa-graduation-cap"></i>
-        <span>EduSpace</span>
-      </div>
-      <nav class="nav-tabs">
-        <button id="btn-docs" class="tab-btn active" onclick="switchTab('docs')">
-          <i class="fa-solid fa-folder-open"></i> Tài liệu & Bài tập
-        </button>
-        <button id="btn-tests" class="tab-btn" onclick="switchTab('tests')">
-          <i class="fa-solid fa-pen-to-square"></i> Bài kiểm tra Online
-        </button>
-        <button id="btn-leaderboard" class="tab-btn" onclick="switchTab('leaderboard')">
-          <i class="fa-solid fa-trophy"></i> Bảng Vinh Danh
-        </button>
-        <a href="#teacher-contact" class="tab-btn">
-          <i class="fa-solid fa-headset"></i> Hỏi bài Giáo viên
-        </a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- TRANG BÌA (HERO BANNER) -->
-  <section class="hero-banner">
-    <div class="hero-card">
-      <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" alt="Ảnh Bìa Lớp Học" class="hero-img" id="hero-cover-img">
-      <div class="hero-content">
-        <h1>Cổng Thông Tin Học Tập & Ôn Luyện</h1>
-        <p>Hệ thống tự động cập nhật tài liệu, bài tập, kiểm tra và Bảng vinh danh thành tích học sinh. Hỗ trợ giải bài 24/7 với Trợ lý AI.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Controls Bar (Bộ lọc dùng cho Tab Tài liệu & Bài kiểm tra) -->
-    <div class="controls-bar" id="controls-bar">
-      <div class="class-filter">
-        <label for="class-select"><i class="fa-solid fa-filter"></i> Lớp học:</label>
-        <div class="select-wrapper">
-          <select id="class-select" onchange="handleClassChange()">
-            <option value="">Đang tải danh sách...</option>
-          </select>
-        </div>
-      </div>
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="search-input" placeholder="Tìm kiếm tài liệu, bài tập..." oninput="handleSearch()">
-      </div>
-    </div>
-
-    <!-- PANEL 1: TÀI LIỆU & BÀI TẬP -->
-    <div id="panel-docs" class="tab-panel active">
-      <div id="grid-docs" class="card-grid"></div>
-    </div>
-
-    <!-- PANEL 2: BÀI KIỂM TRA ONLINE -->
-    <div id="panel-tests" class="tab-panel">
-      <div id="grid-tests" class="card-grid"></div>
-    </div>
-
-    <!-- PANEL 3: BẢNG VINH DANH HỌC SINH -->
-    <div id="panel-leaderboard" class="tab-panel">
-      <div class="leaderboard-header">
-        <h2><i class="fa-solid fa-crown" style="color: #f59e0b;"></i> BẢNG VINH DANH HỌC SINH EXCELLENT</h2>
-        <p>Cập nhật tự động kết quả bài kiểm tra và vinh danh những cá nhân xuất sắc nhất</p>
-      </div>
-
-      <!-- Khối chọn lớp cho Bảng Vinh Danh -->
-      <div class="class-pills">
-        <button class="pill-btn active" onclick="filterLeaderboardClass('Lớp 10')">Lớp 10</button>
-        <button class="pill-btn" onclick="filterLeaderboardClass('Lớp 11')">Lớp 11</button>
-        <button class="pill-btn" onclick="filterLeaderboardClass('Lớp 12')">Lớp 12</button>
-      </div>
-
-      <!-- Top 3 Podium (Huy chương Vàng - Bạc - Đồng) -->
-      <div class="podium-container" id="podium-area"></div>
-
-      <!-- Bảng xếp hạng tất cả học sinh -->
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th class="rank-num">STT</th>
-              <th>Họ & Tên</th>
-              <th>Mã Đề Thi</th>
-              <th>Điểm Số</th>
-              <th>Thời Gian Nộp</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboard-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- BỘ PHẬN LIÊN HỆ TRỰC TIẾP GIÁO VIÊN -->
-    <section class="teacher-contact-section" id="teacher-contact">
-      <div class="contact-info-text">
-        <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--primary);"></i> Cần Hỏi Bài Trực Tiếp Với Giáo Viên?</h3>
-        <p>Nếu câu hỏi phức tạp hoặc AI chưa giải đáp thỏa đáng, hãy gửi tin nhắn trực tiếp cho Thầy/Cô.</p>
-      </div>
-      <div class="contact-buttons">
-        <a href="https://zalo.me" target="_blank" class="btn-contact btn-zalo"><i class="fa-solid fa-comment"></i> Nhắn Zalo</a>
-        <a href="https://facebook.com" target="_blank" class="btn-contact btn-fb"><i class="fa-brands fa-facebook"></i> Facebook</a>
-        <a href="tel:0123456789" class="btn-contact btn-phone"><i class="fa-solid fa-phone"></i> Gọi Điện</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- Floating Chatbot Widget -->
-  <button class="chat-toggle-btn" onclick="toggleChat()">
-    <i class="fa-solid fa-robot"></i>
-  </button>
-
-  <div class="chat-widget" id="chat-widget">
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <i class="fa-solid fa-bolt"></i>
-        <span>Trợ Lý Giải Bài AI (Phân Tích & Chi Tiết)</span>
-      </div>
-      <button class="chat-close-btn" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="chat-body" id="chat-body">
-      <div class="msg ai">Xin chào! Mình là trợ lý AI. Bạn hãy gửi bài tập cần hỏi, mình sẽ <strong>phân tích hướng tư duy</strong> và cung cấp <strong>lời giải chi tiết</strong> cho bạn nhé!</div>
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Nhập câu hỏi hoặc đề bài..." onkeypress="if(event.key==='Enter') sendAI()">
-      <button class="chat-send-btn" onclick="sendAI()"><i class="fa-solid fa-paper-plane"></i></button>
-    </div>
-  </div>
-
-  <!-- Chân trang Footer -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-left">
-        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i>
-        <span>© 2026 <strong>EduSpace</strong>. Tất cả quyền được bảo lưu. Hệ thống đã bật bảo mật nội dung.</span>
-      </div>
-      <div class="footer-right">
-        <a href="#teacher-contact">Hỗ trợ</a>
-        <a href="javascript:void(0)" onclick="alert('Nội dung trang web được bảo vệ bản quyền.')">Điều khoản</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // URL WEB APP APPS SCRIPT CỦA BẠN (ĐÃ CẬP NHẬT)
-    const API_URL = "https://script.google.com/macros/s/AKfycbzyUtzqPggVYUFfIf0peT8Czov2GhIo1Yw5aFrQD7uKSiNidNz-VkFlO61Hkc-nSrmp9Q/exec";
-
-    let currentTab = 'docs';
-    let docsData = [];
-    let testsData = {};
-    let leaderboardData = { "Lớp 10": [], "Lớp 11": [], "Lớp 12": [] };
-    let currentLeaderboardClass = "Lớp 10";
-
-    // 🔒 BẢO MẬT: Chặn phím tắt F12, Ctrl+U, Ctrl+S, Ctrl+C...
-    document.addEventListener('keydown', function(e) {
-      if (e.keyCode === 123) { e.preventDefault(); return false; }
-      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) { e.preventDefault(); return false; }
-      if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 80)) { e.preventDefault(); return false; }
-    });
-
-    // Khởi chạy ứng dụng
-    async function init() {
-      renderSkeletons('grid-docs');
-      renderSkeletons('grid-tests');
-
-      try {
-        const [resDocs, resTests, resLeaderboard] = await Promise.all([
-          fetch(`${API_URL}?action=getDocuments`).then(r => r.json()).catch(() => ({ status: 'error' })),
-          fetch(`${API_URL}?action=getTests`).then(r => r.json()).catch(() => ({ status: 'error' })),
-          fetch(`${API_URL}?action=getLeaderboard`).then(r => r.json()).catch(() => ({ status: 'error' }))
-        ]);
-
-        if (resDocs.status === 'success') docsData = resDocs.data || [];
-        if (resTests.status === 'success') testsData = resTests.data || {};
-        if (resLeaderboard.status === 'success') leaderboardData = resLeaderboard.data || {};
-
-        updateClassSelectOptions();
-        renderContent();
-      } catch (e) {
-        console.error("Lỗi khởi tạo:", e);
-        showError('grid-docs', 'Không thể kết nối máy chủ dữ liệu.');
-      }
-    }
-
-    // Chuyển Tab Navigation
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
-
-      const controlsBar = document.getElementById('controls-bar');
-
-      if (tab === 'docs') {
-        document.getElementById('btn-docs').classList.add('active');
-        document.getElementById('panel-docs').classList.add('active');
-        controlsBar.style.display = 'flex';
-      } else if (tab === 'tests') {
-        document.getElementById('btn-tests').classList.add('active');
-        document.getElementById('panel-tests').classList.add('active');
-        controlsBar.style.display = 'flex';
-      } else if (tab === 'leaderboard') {
-        document.getElementById('btn-leaderboard').classList.add('active');
-        document.getElementById('panel-leaderboard').classList.add('active');
-        controlsBar.style.display = 'none'; // Ẩn thanh tìm kiếm chung ở trang Vinh danh
-        renderLeaderboard();
-      }
-
-      updateClassSelectOptions();
-      renderContent();
-    }
-
-    function updateClassSelectOptions() {
-      const select = document.getElementById('class-select');
-      const prevValue = select.value;
-      let classes = (currentTab === 'docs') ? docsData.map(d => d.className) : Object.keys(testsData);
-
-      if (classes.length === 0) {
-        select.innerHTML = '<option value="">Không có lớp nào</option>';
-        return;
-      }
-
-      select.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join('');
-      if (classes.includes(prevValue)) select.value = prevValue;
-    }
-
-    function handleClassChange() { renderContent(); }
-    function handleSearch() { renderContent(); }
-
-    function renderContent() {
-      if (currentTab === 'leaderboard') return;
-
-      const selectedClass = document.getElementById('class-select').value;
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-
-      if (currentTab === 'docs') {
-        const grid = document.getElementById('grid-docs');
-        const classObj = docsData.find(d => d.className === selectedClass);
-        let files = classObj ? classObj.files : [];
-
-        if (searchQuery) files = files.filter(f => f.name.toLowerCase().includes(searchQuery));
-        if (files.length === 0) { renderEmptyState(grid, 'Chưa có tài liệu/bài tập cho lựa chọn này.'); return; }
-
-        grid.innerHTML = files.map(f => `
-          <div class="card">
-            <div>
-              <div class="card-icon"><i class="fa-regular fa-file-lines"></i></div>
-              <div class="card-title">${escapeHtml(f.name)}</div>
-              <div class="card-meta"><i class="fa-solid fa-folder"></i> ${escapeHtml(selectedClass)}</div>
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-50 glass-effect border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20">
+                    E
+                </div>
+                <div>
+                    <span class="font-bold text-lg sm:text-xl tracking-tight gradient-text">EduFile Hub</span>
+                    <span class="hidden sm:inline-block text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium ml-2">v2.5</span>
+                </div>
             </div>
-            <a href="${f.url}" target="_blank" class="btn-action">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Xem & Tải về
-            </a>
-          </div>
-        `).join('');
-
-      } else if (currentTab === 'tests') {
-        const grid = document.getElementById('grid-tests');
-        let tests = testsData[selectedClass] || [];
-
-        if (searchQuery) tests = tests.filter(t => t.name.toLowerCase().includes(searchQuery));
-        if (tests.length === 0) { renderEmptyState(grid, 'Chưa có bài kiểm tra online cho lớp này.'); return; }
-
-        grid.innerHTML = tests.map(t => `
-          <div class="card">
-            <div>
-              <div class="card-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-laptop-code"></i></div>
-              <div class="card-title">${escapeHtml(t.name)}</div>
-              <div class="card-meta"><i class="fa-solid fa-clock"></i> Kiểm tra Trực tuyến</div>
+            
+            <div class="flex items-center gap-3">
+                <button id="btn-refresh" onclick="fetchData()" class="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-lg transition">
+                    <i class="fa-solid fa-rotate-right" id="refresh-icon"></i>
+                    <span class="hidden sm:inline">Làm mới</span>
+                </button>
+                <a href="#leaderboard" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition">
+                    <i class="fa-solid fa-trophy text-amber-500"></i>
+                    <span>Vinh Danh</span>
+                </a>
             </div>
-            <a href="${t.url}" target="_blank" class="btn-action" style="background: #d97706;">
-              <i class="fa-solid fa-play"></i> Làm bài ngay
-            </a>
-          </div>
-        `).join('');
-      }
-    }
-
-    // Lọc & Hiển thị Bảng Vinh Danh
-    function filterLeaderboardClass(className) {
-      currentLeaderboardClass = className;
-      document.querySelectorAll('.pill-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText === className);
-      });
-      renderLeaderboard();
-    }
-
-    function renderLeaderboard() {
-      const list = leaderboardData[currentLeaderboardClass] || [];
-      const podiumArea = document.getElementById('podium-area');
-      const tableBody = document.getElementById('leaderboard-table-body');
-
-      const top1 = list[0];
-      const top2 = list[1];
-      const top3 = list[2];
-
-      let podiumHTML = '';
-      if (top2) {
-        podiumHTML += `
-          <div class="podium-card rank-2">
-            <div class="badge-icon"><i class="fa-solid fa-medal"></i></div>
-            <div class="student-name">${escapeHtml(top2.hoTen)}</div>
-            <div class="student-score">${escapeHtml(top2.diemText)}</div>
-            <div class="student-code">${escapeHtml(top2.maDe)}</div>
-          </div>`;
-      }
-      if (top1) {
-        podiumHTML += `
-          <div class="podium-card rank-1">
-            <div class="badge-icon"><i class="fa-solid fa-trophy"></i></div>
-            <div class="student-name">${escapeHtml(top1.hoTen)}</div>
-            <div class="student-score">${escapeHtml(top1.diemText)}</div>
-            <div class="student-code">${escapeHtml(top1.maDe)}</div>
-          </div>`;
-      }
-      if (top3) {
-        podiumHTML += `
-          <div class="podium-card rank-3">
-            <div class="badge-icon"><i class="fa-solid fa-award"></i></div>
-            <div class="student-name">${escapeHtml(top3.hoTen)}</div>
-            <div class="student-score">${escapeHtml(top3.diemText)}</div>
-            <div class="student-code">${escapeHtml(top3.maDe)}</div>
-          </div>`;
-      }
-
-      podiumArea.innerHTML = podiumHTML || '<div class="empty-state" style="width:100%;"><p>Chưa có dữ liệu vinh danh cho lớp này</p></div>';
-
-      if (list.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px;">Chưa có danh sách học sinh.</td></tr>`;
-        return;
-      }
-
-      tableBody.innerHTML = list.map((item, index) => `
-        <tr>
-          <td class="rank-num">#${index + 1}</td>
-          <td><strong>${escapeHtml(item.hoTen)}</strong></td>
-          <td>${escapeHtml(item.maDe)}</td>
-          <td><strong style="color: var(--primary);">${escapeHtml(item.diemText)}</strong></td>
-          <td>${escapeHtml(item.thoiGian)}</td>
-        </tr>
-      `).join('');
-    }
-
-    // UI Helpers
-    function renderSkeletons(containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = Array(4).fill(0).map(() => `
-        <div class="card" style="height: 200px;">
-          <div class="skeleton" style="width: 48px; height: 48px; border-radius: 12px; margin-bottom: 16px;"></div>
-          <div class="skeleton" style="width: 80%; height: 20px; margin-bottom: 12px;"></div>
-          <div class="skeleton" style="width: 40%; height: 14px; margin-bottom: 24px;"></div>
-          <div class="skeleton" style="width: 100%; height: 40px; border-radius: 10px;"></div>
         </div>
-      `).join('');
-    }
+    </header>
 
-    function renderEmptyState(container, message) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fa-regular fa-folder-open"></i>
-          <h3>Không tìm thấy dữ liệu</h3>
-          <p>${message}</p>
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-10">
+
+        <!-- HERO & SEARCH SECTION -->
+        <section class="text-center max-w-3xl mx-auto space-y-6">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                Kho Tài Nguyên <span class="gradient-text">Học Tập & Ôn Thi</span>
+            </h1>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                Tra cứu, xem trước và tải xuống đề thi, bài tập, tài liệu học tập được chia sẻ hoàn toàn miễn phí.
+            </p>
+
+            <!-- SEARCH BAR -->
+            <div class="relative max-w-2xl mx-auto">
+                <div class="relative flex items-center">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-lg"></i>
+                    <input type="text" id="search-input" oninput="debounceSearch()" placeholder="Nhập tên tài liệu, môn học, từ khóa..." 
+                        class="w-full pl-12 pr-10 py-3.5 bg-white border border-slate-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base transition">
+                    <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-4 text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <select id="filter-class" onchange="applyFilters()" class="px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tất cả Khối/Lớp</option>
+                    <option value="10">Khối 10</option>
+                    <option value="11">Khối 11</option>
+                    <option value="12">Khối 12</option>
+                    <option value="Khác">Khác</option>
+                </select>
+
+                <select id="filter-subject" onchange="applyFilters()" class="px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Tất cả Môn Học</option>
+                    <option value="Toán">Toán Học</option>
+                    <option value="Vật Lý">Vật Lý</option>
+                    <option value="Hóa Học">Hóa Học</option>
+                    <option value="Ngữ Văn">Ngữ Văn</option>
+                    <option value="Tiếng Anh">Tiếng Anh</option>
+                    <option value="Tin Học">Tin Học</option>
+                    <option value="Khác">Khác</option>
+                </select>
+
+                <button onclick="resetFilters()" class="px-3.5 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-700 underline font-medium">
+                    Xóa bộ lọc
+                </button>
+            </div>
+        </section>
+
+        <!-- FILE LIST SECTION -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open text-blue-600"></i>
+                    <span>Danh Sách Tài Lieu</span>
+                    <span id="file-count" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-semibold">0</span>
+                </h2>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="py-16 text-center space-y-3">
+                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-blue-600"></i>
+                <p class="text-sm text-slate-500 font-medium">Đang tải dữ liệu từ kho lưu trữ...</p>
+            </div>
+
+            <!-- Grid Display Container -->
+            <div id="file-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden py-16 text-center bg-white rounded-2xl border border-dashed border-slate-300 p-8">
+                <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
+                <p class="text-slate-600 font-medium">Không tìm thấy tài liệu phù hợp</p>
+                <p class="text-xs text-slate-400 mt-1">Hãy thử thay đổi từ khóa hoặc bộ lọc tìm kiếm.</p>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination-container" class="hidden flex items-center justify-center gap-2 pt-6">
+                <button id="btn-prev" onclick="changePage(-1)" class="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <span id="page-info" class="text-xs font-semibold text-slate-600 px-3">Trang 1 / 1</span>
+                <button id="btn-next" onclick="changePage(1)" class="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- LEADERBOARD / VINH DANH SECTION -->
+        <section id="leaderboard" class="bg-gradient-to-br from-amber-500/10 via-purple-500/5 to-blue-500/10 rounded-3xl p-6 sm:p-8 border border-amber-200/60 shadow-sm space-y-6">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-crown text-amber-600"></i> Bảng Vinh Danh
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Thành Tích Xuất Sắc</h2>
+                <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">Tuyên dương các cá nhân đã đạt kết quả xuất sắc trong các kỳ thi thử và đóng góp tài nguyên cho cộng đồng.</p>
+            </div>
+
+            <!-- Leaderboard Table Container -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 font-semibold text-xs uppercase tracking-wider">
+                            <tr>
+                                <th class="py-3.5 px-4 text-center w-16">Hạng</th>
+                                <th class="py-3.5 px-4">Họ và Tên</th>
+                                <th class="py-3.5 px-4">Lớp / Trường</th>
+                                <th class="py-3.5 px-4 text-center">Điểm Số</th>
+                                <th class="py-3.5 px-4 text-center">Danh Hiệu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body" class="divide-y divide-slate-100 font-medium text-slate-700">
+                            <!-- JS sẽ populate danh sách ở đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
+            <p>© 2026 EduFile Hub. Được phát triển phục vụ học tập và chia sẻ kiến thức.</p>
+            <p class="text-slate-400">Kết nối Google Sheets CSV & Apps Script API Ecosystem.</p>
         </div>
-      `;
-    }
+    </footer>
 
-    function showError(containerId, message) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i>
-          <h3>Đã xảy ra lỗi</h3>
-          <p>${message}</p>
-        </div>
-      `;
-    }
+    <!-- SCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. CẤU HÌNH API URL
+        // ==========================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbwHbtYzEWjx4UThciJFdbu6I90AEYIXjHSq_vAZrhKpaqQxNlxkLjFX1wZ1FLGLTMiDkw/exec";
 
-    function escapeHtml(str) {
-      return (str || '').toString().replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
-    }
+        // State Variables
+        let allFiles = [];
+        let filteredFiles = [];
+        let leaderboardData = [];
+        let currentPage = 1;
+        const pageSize = 9;
+        let searchDebounceTimer = null;
 
-    function toggleChat() {
-      document.getElementById('chat-widget').classList.toggle('open');
-    }
-
-    // Chatbot AI Tư Duy 2 Bước
-    async function sendAI() {
-      const input = document.getElementById('chat-input');
-      const question = input.value.trim();
-      if (!question) return;
-
-      const body = document.getElementById('chat-body');
-      body.innerHTML += `<div class="msg user">${escapeHtml(question)}</div>`;
-      input.value = '';
-      body.scrollTop = body.scrollHeight;
-
-      const loadingId = 'ai-loading-' + Date.now();
-      body.innerHTML += `<div class="msg ai" id="${loadingId}"><i class="fa-solid fa-spinner fa-spin"></i> AI đang phân tích bài toán...</div>`;
-      body.scrollTop = body.scrollHeight;
-
-      const structuredPrompt = `Hãy giải bài tập sau theo đúng 2 phần rõ ràng:
-1. [HƯỚNG TƯ DUY & PHÂN TÍCH]: Nêu dạng bài, công thức/kiến thức áp dụng và các bước suy luận chính.
-2. [LỜI GIẢI CHI TIẾT]: Trình bày từng bước giải toán/bài tập chi tiết, rõ ràng và kết luận đáp án.
-
-Đề bài: ${question}`;
-
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'askAI', question: structuredPrompt })
+        // Initialize on Load
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
         });
-        const json = await res.json();
-        document.getElementById(loadingId).innerText = json.reply || "Không nhận được phản hồi từ AI.";
-      } catch (e) {
-        document.getElementById(loadingId).innerText = "Lỗi kết nối tới Trợ lý AI!";
-      }
-      body.scrollTop = body.scrollHeight;
-    }
 
-    init();
-  </script>
+        // ==========================================
+        // 2. FETCH DATA FROM GOOGLE APPS SCRIPT
+        // ==========================================
+        async function fetchData() {
+            showLoading(true);
+            const refreshIcon = document.getElementById("refresh-icon");
+            refreshIcon.classList.add("fa-spin");
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                if (data.status === "success" || data.files) {
+                    allFiles = data.files || [];
+                    leaderboardData = data.leaderboard || [];
+                    
+                    applyFilters();
+                    renderLeaderboard();
+                } else {
+                    console.error("Dữ liệu trả về không đúng định dạng:", data);
+                    showEmptyState(true);
+                }
+            } catch (error) {
+                console.error("Lỗi khi kết nối tới API:", error);
+                showEmptyState(true);
+            } finally {
+                showLoading(false);
+                refreshIcon.classList.remove("fa-spin");
+            }
+        }
+
+        // ==========================================
+        // 3. FILTER & SEARCH LOGIC
+        // ==========================================
+        function debounceSearch() {
+            const clearBtn = document.getElementById("clear-search");
+            const searchValue = document.getElementById("search-input").value.trim();
+            
+            clearBtn.classList.toggle("hidden", searchValue === "");
+
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                applyFilters();
+            }, 300);
+        }
+
+        function clearSearch() {
+            document.getElementById("search-input").value = "";
+            document.getElementById("clear-search").classList.add("hidden");
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById("search-input").value.toLowerCase().trim();
+            const selectedClass = document.getElementById("filter-class").value;
+            const selectedSubject = document.getElementById("filter-subject").value;
+
+            filteredFiles = allFiles.filter(file => {
+                const matchesSearch = !searchQuery || 
+                    (file.title && file.title.toLowerCase().includes(searchQuery)) ||
+                    (file.description && file.description.toLowerCase().includes(searchQuery)) ||
+                    (file.subject && file.subject.toLowerCase().includes(searchQuery));
+
+                const matchesClass = !selectedClass || file.grade == selectedClass;
+                const matchesSubject = !selectedSubject || file.subject === selectedSubject;
+
+                return matchesSearch && matchesClass && matchesSubject;
+            });
+
+            currentPage = 1;
+            renderFiles();
+        }
+
+        function resetFilters() {
+            document.getElementById("search-input").value = "";
+            document.getElementById("filter-class").value = "";
+            document.getElementById("filter-subject").value = "";
+            document.getElementById("clear-search").classList.add("hidden");
+            applyFilters();
+        }
+
+        // ==========================================
+        // 4. RENDER FILES GRID & PAGINATION
+        // ==========================================
+        function renderFiles() {
+            const grid = document.getElementById("file-grid");
+            const fileCount = document.getElementById("file-count");
+            const emptyState = document.getElementById("empty-state");
+            const paginationContainer = document.getElementById("pagination-container");
+
+            fileCount.textContent = filteredFiles.length;
+
+            if (filteredFiles.length === 0) {
+                grid.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                paginationContainer.classList.add("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            grid.classList.remove("hidden");
+
+            // Pagination calculation
+            const totalPages = Math.ceil(filteredFiles.length / pageSize);
+            const startIndex = (currentPage - 1) * pageSize;
+            const paginatedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
+
+            grid.innerHTML = paginatedFiles.map(file => createFileCard(file)).join("");
+
+            // Update Pagination Controls
+            if (totalPages > 1) {
+                paginationContainer.classList.remove("hidden");
+                document.getElementById("page-info").textContent = `Trang ${currentPage} / ${totalPages}`;
+                document.getElementById("btn-prev").disabled = currentPage === 1;
+                document.getElementById("btn-next").disabled = currentPage === totalPages;
+            } else {
+                paginationContainer.classList.add("hidden");
+            }
+        }
+
+        function createFileCard(file) {
+            const fileTypeIcon = getFileIcon(file.type || file.url);
+            
+            return `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+                    <div class="space-y-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="p-2.5 rounded-xl bg-slate-100 text-slate-700 group-hover:bg-blue-50 group-hover:text-blue-600 transition">
+                                ${fileTypeIcon}
+                            </div>
+                            <div class="flex flex-wrap gap-1 justify-end">
+                                ${file.grade ? `<span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">Khối ${file.grade}</span>` : ''}
+                                ${file.subject ? `<span class="text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md">${file.subject}</span>` : ''}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-slate-800 line-clamp-2 text-sm sm:text-base group-hover:text-blue-600 transition" title="${file.title}">
+                                ${file.title || 'Tài liệu không tên'}
+                            </h3>
+                            <p class="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">
+                                ${file.description || 'Không có mô tả chi tiết.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <span class="text-[11px] text-slate-400 font-medium">
+                            <i class="fa-regular fa-calendar-alt mr-1"></i>${file.date || 'Gần đây'}
+                        </span>
+                        
+                        <div class="flex items-center gap-2">
+                            ${file.previewUrl ? `
+                                <a href="${file.previewUrl}" target="_blank" class="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
+                                    Xem
+                                </a>
+                            ` : ''}
+                            <a href="${file.url}" target="_blank" download class="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition flex items-center gap-1">
+                                <i class="fa-solid fa-download text-[10px]"></i> Tải về
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderFiles();
+            window.scrollTo({ top: document.getElementById("file-grid").offsetTop - 100, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 5. RENDER LEADERBOARD
+        // ==========================================
+        function renderLeaderboard() {
+            const tbody = document.getElementById("leaderboard-body");
+            
+            if (!leaderboardData || leaderboardData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-6 text-xs text-slate-400">Chưa có dữ liệu bảng vinh danh.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = leaderboardData.map((item, index) => {
+                let rankBadge = `<span class="font-bold text-slate-500">${index + 1}</span>`;
+                if (index === 0) rankBadge = `<i class="fa-solid fa-medal text-amber-500 text-lg" title="Hạng 1"></i>`;
+                else if (index === 1) rankBadge = `<i class="fa-solid fa-medal text-slate-400 text-lg" title="Hạng 2"></i>`;
+                else if (index === 2) rankBadge = `<i class="fa-solid fa-medal text-amber-700 text-lg" title="Hạng 3"></i>`;
+
+                return `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3.5 px-4 text-center">${rankBadge}</td>
+                        <td class="py-3.5 px-4 font-bold text-slate-800">${item.name || 'Thí sinh'}</td>
+                        <td class="py-3.5 px-4 text-slate-600 text-xs">${item.class || 'N/A'}</td>
+                        <td class="py-3.5 px-4 text-center font-extrabold text-blue-600">${item.score || 0}</td>
+                        <td class="py-3.5 px-4 text-center">
+                            <span class="text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full">
+                                ${item.badge || 'Thành viên xuất sắc'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // ==========================================
+        // 6. HELPER FUNCTIONS
+        // ==========================================
+        function getFileIcon(fileTypeOrUrl = '') {
+            const str = fileTypeOrUrl.toLowerCase();
+            if (str.includes('pdf')) return '<i class="fa-solid fa-file-pdf text-red-500 text-xl"></i>';
+            if (str.includes('doc') || str.includes('word')) return '<i class="fa-solid fa-file-word text-blue-500 text-xl"></i>';
+            if (str.includes('xls') || str.includes('sheet') || str.includes('csv')) return '<i class="fa-solid fa-file-excel text-emerald-500 text-xl"></i>';
+            if (str.includes('ppt') || str.includes('presentation')) return '<i class="fa-solid fa-file-powerpoint text-orange-500 text-xl"></i>';
+            if (str.includes('zip') || str.includes('rar')) return '<i class="fa-solid fa-file-zipper text-purple-500 text-xl"></i>';
+            return '<i class="fa-solid fa-file-lines text-slate-500 text-xl"></i>';
+        }
+
+        function showLoading(isLoading) {
+            document.getElementById("loading-spinner").classList.toggle("hidden", !isLoading);
+            if (isLoading) {
+                document.getElementById("file-grid").classList.add("hidden");
+                document.getElementById("empty-state").classList.add("hidden");
+            }
+        }
+
+        function showEmptyState(isEmpty) {
+            document.getElementById("empty-state").classList.toggle("hidden", !isEmpty);
+            if (isEmpty) {
+                document.getElementById("file-grid").classList.add("hidden");
+            }
+        }
+    </script>
 </body>
 </html>
