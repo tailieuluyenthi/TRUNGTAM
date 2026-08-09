@@ -7,24 +7,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- DÁN URL GOOGLE APPS SCRIPT VÀO ĐÂY -->
+    <!-- CẤU HÌNH API URL SCRIPT -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyoqxzyjB1_A8dC_sM9LF7sTVeVhAjBeFv-oSUrFyJBNUJ8iTtFdhpNKWhBeFqdzd1S/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxAe69m4jAYcEj89ZwFezzkwCr2R0bysN5J27LV5kwudRwSEaa7aiKnHFh2mpr1iO_6/exec";
     </script>
 
-    <!-- FORM DÀNH CHO KHÁCH (ĐĂNG NHẬP / ĐĂNG KÝ) -->
-    <div id="authContainer" class="flex-1 flex items-center justify-center p-4">
+    <!-- TRANG 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="page-auth" class="page-section active flex-1 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-8">
             <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl mb-3">
-                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl mb-3">
+                    <i class="fa-solid fa-graduation-cap text-3xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold text-slate-900">Trung Tâm Học Tập</h1>
-                <p class="text-slate-500 text-sm mt-1">Cổng thông tin bài tập & tài liệu</p>
+                <p class="text-slate-500 text-sm mt-1">Cổng thông tin bài tập, tài liệu & AI hỗ trợ</p>
             </div>
 
             <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-sm font-semibold">
@@ -65,81 +69,136 @@
                 </div>
                 <div class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg flex items-center gap-2">
                     <i class="fa-solid fa-circle-info"></i>
-                    <span>Tài khoản dùng thử có thời hạn 30 ngày & không làm được bài kiểm tra online.</span>
+                    <span>Dùng thử 30 ngày. Không thể làm bài kiểm tra online.</span>
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Đăng Ký Dùng Thử</button>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Tạo Tài Khoản Dùng Thử</button>
             </form>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
-    <div id="dashboardContainer" class="hidden min-h-screen flex flex-col">
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+    <!-- MAIN DASHBOARD ĐA TRANG -->
+    <div id="mainDashboard" class="hidden min-h-screen flex flex-col">
+        <!-- NAVBAR -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold">
-                        <i class="fa-solid fa-book-open"></i>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <span id="userClassBadge" class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-bold">Lớp --</span>
                     </div>
-                    <div>
-                        <h2 class="font-bold text-slate-900 leading-none">Giao Diện Học Sinh</h2>
-                        <span id="userClassBadge" class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium mt-1 inline-block">--</span>
-                    </div>
+
+                    <nav class="hidden md:flex items-center gap-1">
+                        <button onclick="navigateTo('page-docs')" id="nav-docs" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50">
+                            <i class="fa-solid fa-folder-open mr-1.5"></i>Tài Liệu
+                        </button>
+                        <button onclick="navigateTo('page-tests')" id="nav-tests" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">
+                            <i class="fa-solid fa-pen-to-square mr-1.5"></i>Bài Kiểm Tra
+                        </button>
+                        <button onclick="navigateTo('page-ai')" id="nav-ai" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">
+                            <i class="fa-solid fa-robot mr-1.5"></i>Trợ Lý AI (Groq Script)
+                        </button>
+                    </nav>
                 </div>
+
                 <div class="flex items-center gap-4">
                     <div class="text-right hidden sm:block">
-                        <div id="userEmail" class="text-sm font-semibold text-slate-700">user@gmail.com</div>
-                        <div id="userAccountType" class="text-xs text-slate-400">Loại tài khoản</div>
+                        <div id="userEmail" class="text-sm font-semibold text-slate-700">email@example.com</div>
+                        <div id="userAccountType" class="text-xs text-slate-400">Tài khoản</div>
                     </div>
                     <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-600 transition rounded-lg hover:bg-slate-100" title="Đăng xuất">
                         <i class="fa-solid fa-right-from-bracket text-lg"></i>
                     </button>
                 </div>
             </div>
+
+            <!-- Mobile Nav Bar -->
+            <div class="md:hidden flex border-t border-slate-100 bg-slate-50 px-2 py-1.5 justify-around text-xs font-medium">
+                <button onclick="navigateTo('page-docs')" class="p-2 text-indigo-600 font-bold"><i class="fa-solid fa-folder-open block text-center text-base mb-0.5"></i>Tài liệu</button>
+                <button onclick="navigateTo('page-tests')" class="p-2 text-slate-500"><i class="fa-solid fa-pen-to-square block text-center text-base mb-0.5"></i>Kiểm tra</button>
+                <button onclick="navigateTo('page-ai')" class="p-2 text-slate-500"><i class="fa-solid fa-robot block text-center text-base mb-0.5"></i>Hỏi AI</button>
+            </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Cột Tài Liệu Drive -->
-            <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
-                            <i class="fa-solid fa-folder-open text-xl"></i>
-                        </div>
+        <!-- NOIDUNG TRANG -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+            
+            <!-- TRANG TÀI LIỆU -->
+            <section id="page-docs" class="page-section active">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900">Tài Liệu Học Tập</h3>
-                            <p class="text-xs text-slate-500">Đồng bộ từ Google Drive</p>
+                            <h3 class="font-bold text-xl text-slate-900">Tài Liệu Học Tập</h3>
+                            <p class="text-sm text-slate-500 mt-0.5">Lưu trữ từ Google Drive giáo viên</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a id="directDriveBtn" href="#" target="_blank" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                                <i class="fa-brands fa-google-drive text-emerald-600 text-sm"></i> Mở Folder Drive
+                            </a>
+                            <button onclick="loadDocuments()" class="px-3.5 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl text-xs font-semibold transition">
+                                <i class="fa-solid fa-rotate mr-1"></i> Tải lại
+                            </button>
                         </div>
                     </div>
-                    <button onclick="loadDocuments()" class="text-xs text-indigo-600 hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-rotate"></i> Tải lại
-                    </button>
+                    <div id="docList" class="space-y-3 min-h-[200px]"></div>
                 </div>
-                <div id="docList" class="space-y-3 flex-1"></div>
             </section>
 
-            <!-- Cột Bài Kiểm Tra -->
-            <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
-                            <i class="fa-solid fa-pen-to-square text-xl"></i>
-                        </div>
+            <!-- TRANG BÀI KIỂM TRA -->
+            <section id="page-tests" class="page-section">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="mb-6">
+                        <h3 class="font-bold text-xl text-slate-900">Bài Kiểm Tra Online</h3>
+                        <p class="text-sm text-slate-500 mt-0.5">Nội dung cập nhật từ Google Sheets</p>
+                    </div>
+
+                    <div id="trialLockNotice" class="hidden bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 mb-6 text-sm flex gap-3 items-start">
+                        <i class="fa-solid fa-lock text-amber-600 text-lg mt-0.5"></i>
                         <div>
-                            <h3 class="font-bold text-lg text-slate-900">Bài Kiểm Tra Online</h3>
-                            <p class="text-xs text-slate-500">Cập nhật từ Google Sheets</p>
+                            <div class="font-semibold">Hạn chế tài khoản dùng thử</div>
+                            <div class="text-xs mt-0.5">Tài khoản dùng thử không làm được bài kiểm tra. Hãy đăng ký chính thức với giáo viên!</div>
                         </div>
                     </div>
-                </div>
 
-                <div id="trialLockNotice" class="hidden bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 mb-4 text-sm flex gap-3 items-start">
-                    <i class="fa-solid fa-lock text-amber-600 text-lg mt-0.5"></i>
-                    <div>
-                        <div class="font-semibold">Hạn chế quyền truy cập</div>
-                        <div class="text-xs mt-0.5">Tài khoản dùng thử không thể làm bài kiểm tra online. Vui lòng liên hệ giáo viên để nâng cấp tài khoản chính thức.</div>
+                    <div id="testList" class="space-y-3 min-h-[200px]"></div>
+                </div>
+            </section>
+
+            <!-- TRANG CHATBOT AI -->
+            <section id="page-ai" class="page-section">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[650px]">
+                    <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 leading-none">Trợ Lý AI Học Tập</h3>
+                                <span class="text-[11px] text-emerald-600 font-medium">● Đã kết nối Groq API (Google Apps Script Backend)</span>
+                            </div>
+                        </div>
+                        <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash mr-1"></i>Xóa chat</button>
+                    </div>
+
+                    <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4">
+                        <div class="flex gap-3 items-start">
+                            <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
+                            <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-700">
+                                Xin chào! Mình là AI học tập. Bạn cần giải bài tập nào hôm nay?
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-t border-slate-100 bg-white rounded-b-2xl">
+                        <form onsubmit="sendAiMessage(event)" class="flex gap-2">
+                            <input type="text" id="aiInput" placeholder="Nhập câu hỏi hoặc bài tập..." class="flex-1 px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                            <button type="submit" id="sendAiBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition flex items-center gap-2">
+                                <span>Gửi</span> <i class="fa-solid fa-paper-plane text-xs"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <div id="testList" class="space-y-3 flex-1"></div>
             </section>
         </main>
     </div>
@@ -148,34 +207,41 @@
     <div id="loading" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center">
         <div class="bg-white p-5 rounded-2xl shadow-2xl flex items-center gap-3">
             <div class="w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-sm font-medium text-slate-700">Đang xử lý dữ liệu...</span>
+            <span class="text-sm font-medium text-slate-700">Đang kết nối Server...</span>
         </div>
     </div>
 
     <script>
         let currentUser = null;
+        let chatHistory = [];
 
         function showLoading(show) {
             document.getElementById('loading').classList.toggle('hidden', !show);
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100";
+            });
+            if(pageId === 'page-docs') document.getElementById('nav-docs').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
+            if(pageId === 'page-tests') document.getElementById('nav-tests').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
+            if(pageId === 'page-ai') document.getElementById('nav-ai').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
         }
 
         function switchAuthTab(tab) {
             const isLogin = tab === 'login';
             document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
             document.getElementById('registerForm').classList.toggle('hidden', isLogin);
-            document.getElementById('tabLoginBtn').className = isLogin 
-                ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" 
-                : "flex-1 py-2 rounded-lg text-slate-500 transition";
-            document.getElementById('tabRegisterBtn').className = !isLogin 
-                ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" 
-                : "flex-1 py-2 rounded-lg text-slate-500 transition";
+            document.getElementById('tabLoginBtn').className = isLogin ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" : "flex-1 py-2 rounded-lg text-slate-500 transition";
+            document.getElementById('tabRegisterBtn').className = !isLogin ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" : "flex-1 py-2 rounded-lg text-slate-500 transition";
         }
 
         async function callApi(payload) {
             const formData = new FormData();
-            for (const key in payload) {
-                formData.append(key, payload[key]);
-            }
+            for (const key in payload) { formData.append(key, payload[key]); }
             const res = await fetch(API_URL, { method: 'POST', body: formData });
             return await res.json();
         }
@@ -207,49 +273,60 @@
                 }
             } catch (err) {
                 showLoading(false);
-                alert("Không thể kết nối đến hệ thống Server!");
+                alert("Lỗi kết nối tới Server!");
             }
         }
 
         function renderDashboard() {
-            document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('dashboardContainer').classList.remove('hidden');
+            document.getElementById('page-auth').classList.remove('active');
+            document.getElementById('mainDashboard').classList.remove('hidden');
 
             document.getElementById('userEmail').innerText = currentUser.email;
             document.getElementById('userClassBadge').innerText = currentUser.userClass;
-            document.getElementById('userAccountType').innerText = currentUser.type === 'official' ? 'Học sinh chính thức' : 'Tài khoản dùng thử (1 tháng)';
+            document.getElementById('userAccountType').innerText = currentUser.type === 'official' ? 'Học sinh chính thức' : 'Tài khoản dùng thử';
 
+            navigateTo('page-docs');
             loadDocuments();
             loadTests();
         }
 
         async function loadDocuments() {
             const docList = document.getElementById('docList');
-            docList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải dữ liệu Google Drive...</div>`;
+            docList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải dữ liệu Google Drive...</div>`;
 
             try {
                 const data = await callApi({ action: 'getDocuments', userClass: currentUser.userClass });
 
-                if (data.success && data.files.length > 0) {
+                if (data.folderUrl) {
+                    document.getElementById('directDriveBtn').href = data.folderUrl;
+                }
+
+                if (data.success && data.files && data.files.length > 0) {
                     docList.innerHTML = data.files.map(file => `
-                        <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-indigo-50/50 transition border border-slate-100">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-indigo-50/50 transition border border-slate-100">
                             <div class="flex items-center gap-3 overflow-hidden">
-                                <i class="fa-solid fa-file-lines text-indigo-500 text-xl"></i>
+                                <i class="fa-solid fa-file-pdf text-red-500 text-2xl"></i>
                                 <div class="truncate">
                                     <div class="text-sm font-semibold text-slate-800 truncate">${file.name}</div>
                                     <div class="text-xs text-slate-400">${file.size}</div>
                                 </div>
                             </div>
-                            <a href="${file.url}" target="_blank" class="px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1 shrink-0">
+                            <a href="${file.url}" target="_blank" class="px-3.5 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition shrink-0 flex items-center gap-1">
                                 <i class="fa-solid fa-arrow-down-long"></i> Xem / Tải
                             </a>
                         </div>
                     `).join('');
                 } else {
-                    docList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có tài liệu nào trong thư mục ${currentUser.userClass}</div>`;
+                    docList.innerHTML = `
+                        <div class="text-slate-400 text-sm py-8 text-center">
+                            <p>Chưa tìm thấy tệp hiển thị danh sách trực tiếp.</p>
+                            <a href="${data.folderUrl || '#'}" target="_blank" class="mt-2 inline-block text-indigo-600 hover:underline font-semibold">
+                                Bấm vào đây để mở Folder Drive ${currentUser.userClass}
+                            </a>
+                        </div>`;
                 }
             } catch (e) {
-                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách tài liệu.</div>`;
+                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải dữ liệu.</div>`;
             }
         }
 
@@ -264,19 +341,19 @@
             }
 
             trialNotice.classList.add('hidden');
-            testList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải bài kiểm tra...</div>`;
+            testList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải bài kiểm tra...</div>`;
 
             try {
                 const data = await callApi({ action: 'getTests', userClass: currentUser.userClass });
 
                 if (data.success && data.tests.length > 0) {
                     testList.innerHTML = data.tests.map(test => `
-                        <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-emerald-50/50 transition border border-slate-100">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-emerald-50/50 transition border border-slate-100">
                             <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-clipboard-question text-emerald-600 text-xl"></i>
+                                <i class="fa-solid fa-clipboard-question text-emerald-600 text-2xl"></i>
                                 <div class="text-sm font-semibold text-slate-800">${test.title}</div>
                             </div>
-                            <a href="${test.link}" target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition shrink-0">
+                            <a href="${test.link}" target="_blank" class="px-4 py-2 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition shrink-0">
                                 Làm bài
                             </a>
                         </div>
@@ -285,14 +362,86 @@
                     testList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có bài kiểm tra cho ${currentUser.userClass}</div>`;
                 }
             } catch (e) {
-                testList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách bài kiểm tra.</div>`;
+                testList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách.</div>`;
             }
+        }
+
+        // ==========================================
+        // GỌI AI THÔNG QUA SCRIPT BACKEND (BẢO MẬT API KEY)
+        // ==========================================
+        async function sendAiMessage(e) {
+            e.preventDefault();
+            const inputEl = document.getElementById('aiInput');
+            const userMsg = inputEl.value.trim();
+            if (!userMsg) return;
+
+            const chatBox = document.getElementById('chatBox');
+            
+            chatBox.innerHTML += `
+                <div class="flex gap-3 items-start justify-end">
+                    <div class="bg-indigo-600 text-white rounded-2xl p-3.5 text-sm max-w-[80%]">
+                        ${userMsg}
+                    </div>
+                </div>`;
+            
+            inputEl.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const loadingId = "ai-loading-" + Date.now();
+            chatBox.innerHTML += `
+                <div id="${loadingId}" class="flex gap-3 items-start">
+                    <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
+                    <div class="bg-slate-100 rounded-2xl p-3.5 text-sm text-slate-500 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-notch animate-spin"></i> Apps Script đang gửi yêu cầu Groq AI...
+                    </div>
+                </div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            chatHistory.push({ role: "user", content: userMsg });
+
+            try {
+                const data = await callApi({
+                    action: 'chatAI',
+                    messages: JSON.stringify(chatHistory)
+                });
+
+                document.getElementById(loadingId).remove();
+
+                if (data.success && data.reply) {
+                    chatHistory.push({ role: "assistant", content: data.reply });
+
+                    chatBox.innerHTML += `
+                        <div class="flex gap-3 items-start">
+                            <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
+                            <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-800 whitespace-pre-line leading-relaxed">
+                                ${data.reply}
+                            </div>
+                        </div>`;
+                } else {
+                    alert(data.message || "Không thể phản hồi từ AI.");
+                }
+            } catch (err) {
+                document.getElementById(loadingId).remove();
+                alert("Lỗi khi kết nối tới Server AI!");
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function clearChat() {
+            chatHistory = [];
+            document.getElementById('chatBox').innerHTML = `
+                <div class="flex gap-3 items-start">
+                    <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
+                    <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-700">
+                        Đã xóa lịch sử chat. Bạn muốn hỏi bài tập gì tiếp theo?
+                    </div>
+                </div>`;
         }
 
         function logout() {
             currentUser = null;
-            document.getElementById('authContainer').classList.remove('hidden');
-            document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.add('hidden');
+            document.getElementById('page-auth').classList.add('active');
         }
     </script>
 </body>
