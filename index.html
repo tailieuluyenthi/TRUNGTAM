@@ -3,457 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduFile Hub - Khai Thác Tài Nguyên Học Tập</title>
+    <title>Hệ Thống Học Tập Online</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 9999px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-50 glass-effect border-b border-slate-200/80 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20">
-                    E
+    <!-- CẤU HÌNH API URL -->
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbw9_jP-hcRohFoBMQ5PkaDPI7Nig6xulFWKscFSLKRuaZBkxx5O-HkvVXiWKbnguTVG/exec";
+    </script>
+
+    <!-- FORM ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="authContainer" class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-8 transition-all">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl mb-3">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-900">Trung Tâm Học Tập</h1>
+                <p class="text-slate-500 text-sm mt-1">Hệ thống tài liệu & kiểm tra trực tuyến</p>
+            </div>
+
+            <!-- Tab chọn Đăng nhập/Đăng ký -->
+            <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-sm font-semibold">
+                <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Đăng Nhập</button>
+                <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-slate-500 transition">Đăng Ký Thử</button>
+            </div>
+
+            <!-- Form Đăng Nhập -->
+            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Email / Tài khoản</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
                 </div>
                 <div>
-                    <span class="font-bold text-lg sm:text-xl tracking-tight gradient-text">EduFile Hub</span>
-                    <span class="hidden sm:inline-block text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium ml-2">v2.5</span>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Mật khẩu</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
                 </div>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <button id="btn-refresh" onclick="fetchData()" class="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-lg transition">
-                    <i class="fa-solid fa-rotate-right" id="refresh-icon"></i>
-                    <span class="hidden sm:inline">Làm mới</span>
-                </button>
-                <a href="#leaderboard" class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition">
-                    <i class="fa-solid fa-trophy text-amber-500"></i>
-                    <span>Vinh Danh</span>
-                </a>
-            </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Đăng Nhập</button>
+            </form>
+
+            <!-- Form Đăng Ký -->
+            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Email đăng ký</label>
+                    <input type="email" id="regEmail" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Mật khẩu</label>
+                    <input type="password" id="regPassword" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Chọn Lớp Học</label>
+                    <select id="regClass" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                        <option value="Lớp 10">Lớp 10</option>
+                        <option value="Lớp 11">Lớp 11</option>
+                        <option value="Lớp 12">Lớp 12</option>
+                    </select>
+                </div>
+                <div class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Tài khoản thử có thời hạn 30 ngày & bị hạn chế quyền làm bài kiểm tra online.</span>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Đăng Ký Dùng Thử</button>
+            </form>
         </div>
-    </header>
+    </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-10">
-
-        <!-- HERO & SEARCH SECTION -->
-        <section class="text-center max-w-3xl mx-auto space-y-6">
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
-                Kho Tài Nguyên <span class="gradient-text">Học Tập & Ôn Thi</span>
-            </h1>
-            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Tra cứu, xem trước và tải xuống đề thi, bài tập, tài liệu học tập được chia sẻ hoàn toàn miễn phí.
-            </p>
-
-            <!-- SEARCH BAR -->
-            <div class="relative max-w-2xl mx-auto">
-                <div class="relative flex items-center">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-lg"></i>
-                    <input type="text" id="search-input" oninput="debounceSearch()" placeholder="Nhập tên tài liệu, môn học, từ khóa..." 
-                        class="w-full pl-12 pr-10 py-3.5 bg-white border border-slate-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base transition">
-                    <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-4 text-slate-400 hover:text-slate-600">
-                        <i class="fa-solid fa-circle-xmark"></i>
+    <!-- GIAO DIỆN SAU KHI ĐĂNG NHẬP -->
+    <div id="dashboardContainer" class="hidden min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 leading-none">Giao Diện Học Sinh</h2>
+                        <span id="userClassBadge" class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-medium mt-1 inline-block">Lớp --</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div id="userEmail" class="text-sm font-semibold text-slate-700">email@example.com</div>
+                        <div id="userAccountType" class="text-xs text-slate-400">Tài khoản</div>
+                    </div>
+                    <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-600 transition rounded-lg hover:bg-slate-100" title="Đăng xuất">
+                        <i class="fa-solid fa-right-from-bracket text-lg"></i>
                     </button>
                 </div>
             </div>
+        </header>
 
-            <!-- FILTERS -->
-            <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-                <select id="filter-class" onchange="applyFilters()" class="px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Tất cả Khối/Lớp</option>
-                    <option value="10">Khối 10</option>
-                    <option value="11">Khối 11</option>
-                    <option value="12">Khối 12</option>
-                    <option value="Khác">Khác</option>
-                </select>
-
-                <select id="filter-subject" onchange="applyFilters()" class="px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Tất cả Môn Học</option>
-                    <option value="Toán">Toán Học</option>
-                    <option value="Vật Lý">Vật Lý</option>
-                    <option value="Hóa Học">Hóa Học</option>
-                    <option value="Ngữ Văn">Ngữ Văn</option>
-                    <option value="Tiếng Anh">Tiếng Anh</option>
-                    <option value="Tin Học">Tin Học</option>
-                    <option value="Khác">Khác</option>
-                </select>
-
-                <button onclick="resetFilters()" class="px-3.5 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-700 underline font-medium">
-                    Xóa bộ lọc
-                </button>
-            </div>
-        </section>
-
-        <!-- FILE LIST SECTION -->
-        <section class="space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-folder-open text-blue-600"></i>
-                    <span>Danh Sách Tài Lieu</span>
-                    <span id="file-count" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-semibold">0</span>
-                </h2>
-            </div>
-
-            <!-- Loading Spinner -->
-            <div id="loading-spinner" class="py-16 text-center space-y-3">
-                <i class="fa-solid fa-circle-notch fa-spin text-3xl text-blue-600"></i>
-                <p class="text-sm text-slate-500 font-medium">Đang tải dữ liệu từ kho lưu trữ...</p>
-            </div>
-
-            <!-- Grid Display Container -->
-            <div id="file-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-
-            <!-- Empty State -->
-            <div id="empty-state" class="hidden py-16 text-center bg-white rounded-2xl border border-dashed border-slate-300 p-8">
-                <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
-                <p class="text-slate-600 font-medium">Không tìm thấy tài liệu phù hợp</p>
-                <p class="text-xs text-slate-400 mt-1">Hãy thử thay đổi từ khóa hoặc bộ lọc tìm kiếm.</p>
-            </div>
-
-            <!-- Pagination -->
-            <div id="pagination-container" class="hidden flex items-center justify-center gap-2 pt-6">
-                <button id="btn-prev" onclick="changePage(-1)" class="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <span id="page-info" class="text-xs font-semibold text-slate-600 px-3">Trang 1 / 1</span>
-                <button id="btn-next" onclick="changePage(1)" class="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- LEADERBOARD / VINH DANH SECTION -->
-        <section id="leaderboard" class="bg-gradient-to-br from-amber-500/10 via-purple-500/5 to-blue-500/10 rounded-3xl p-6 sm:p-8 border border-amber-200/60 shadow-sm space-y-6">
-            <div class="text-center space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">
-                    <i class="fa-solid fa-crown text-amber-600"></i> Bảng Vinh Danh
+        <!-- Main Workspace -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Khu vực Tài Liệu Drive -->
+            <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                            <i class="fa-solid fa-folder-open text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-900">Tài Liệu Học Tập</h3>
+                            <p class="text-xs text-slate-500">Tải lên từ Google Drive giáo viên</p>
+                        </div>
+                    </div>
+                    <button onclick="loadDocuments()" class="text-xs text-indigo-600 hover:underline">Tải lại</button>
                 </div>
-                <h2 class="text-2xl font-extrabold text-slate-900">Thành Tích Xuất Sắc</h2>
-                <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">Tuyên dương các cá nhân đã đạt kết quả xuất sắc trong các kỳ thi thử và đóng góp tài nguyên cho cộng đồng.</p>
-            </div>
+                <div id="docList" class="space-y-3 flex-1"></div>
+            </section>
 
-            <!-- Leaderboard Table Container -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 font-semibold text-xs uppercase tracking-wider">
-                            <tr>
-                                <th class="py-3.5 px-4 text-center w-16">Hạng</th>
-                                <th class="py-3.5 px-4">Họ và Tên</th>
-                                <th class="py-3.5 px-4">Lớp / Trường</th>
-                                <th class="py-3.5 px-4 text-center">Điểm Số</th>
-                                <th class="py-3.5 px-4 text-center">Danh Hiệu</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-body" class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <!-- JS sẽ populate danh sách ở đây -->
-                        </tbody>
-                    </table>
+            <!-- Khu vực Bài Kiểm Tra Online -->
+            <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i class="fa-solid fa-pen-to-square text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-slate-900">Bài Kiểm Tra Online</h3>
+                            <p class="text-xs text-slate-500">Cập nhật từ Google Sheets</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </section>
 
-    </main>
+                <!-- Cảnh báo nếu là tài khoản thử -->
+                <div id="trialLockNotice" class="hidden bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 mb-4 text-sm flex gap-3 items-start">
+                    <i class="fa-solid fa-lock text-amber-600 text-lg mt-0.5"></i>
+                    <div>
+                        <div class="font-semibold">Hạn chế quyền truy cập</div>
+                        <div class="text-xs mt-0.5">Tài khoản dùng thử không có quyền làm bài kiểm tra. Vui lòng đăng ký học chính thức với giáo viên!</div>
+                    </div>
+                </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-2">
-            <p>© 2026 EduFile Hub. Được phát triển phục vụ học tập và chia sẻ kiến thức.</p>
-            <p class="text-slate-400">Kết nối Google Sheets CSV & Apps Script API Ecosystem.</p>
+                <div id="testList" class="space-y-3 flex-1"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Màn hình Loading -->
+    <div id="loading" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="bg-white p-5 rounded-2xl shadow-2xl flex items-center gap-3">
+            <div class="w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-medium text-slate-700">Đang xử lý...</span>
         </div>
-    </footer>
+    </div>
 
-    <!-- SCRIPT LOGIC -->
+    <!-- Script tương tác -->
     <script>
-        // ==========================================
-        // 1. CẤU HÌNH API URL
-        // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbwHbtYzEWjx4UThciJFdbu6I90AEYIXjHSq_vAZrhKpaqQxNlxkLjFX1wZ1FLGLTMiDkw/exec";
+        let currentUser = null;
 
-        // State Variables
-        let allFiles = [];
-        let filteredFiles = [];
-        let leaderboardData = [];
-        let currentPage = 1;
-        const pageSize = 9;
-        let searchDebounceTimer = null;
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('hidden', !show);
+        }
 
-        // Initialize on Load
-        document.addEventListener("DOMContentLoaded", () => {
-            fetchData();
-        });
+        function switchAuthTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
+            document.getElementById('registerForm').classList.toggle('hidden', isLogin);
+            
+            document.getElementById('tabLoginBtn').className = isLogin 
+                ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" 
+                : "flex-1 py-2 rounded-lg text-slate-500 transition";
+            document.getElementById('tabRegisterBtn').className = !isLogin 
+                ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" 
+                : "flex-1 py-2 rounded-lg text-slate-500 transition";
+        }
 
-        // ==========================================
-        // 2. FETCH DATA FROM GOOGLE APPS SCRIPT
-        // ==========================================
-        async function fetchData() {
+        async function handleAuth(e, type) {
+            e.preventDefault();
             showLoading(true);
-            const refreshIcon = document.getElementById("refresh-icon");
-            refreshIcon.classList.add("fa-spin");
+
+            let payload = { action: type };
+            if (type === 'login') {
+                payload.email = document.getElementById('loginEmail').value;
+                payload.password = document.getElementById('loginPassword').value;
+            } else {
+                payload.email = document.getElementById('regEmail').value;
+                payload.password = document.getElementById('regPassword').value;
+                payload.userClass = document.getElementById('regClass').value;
+            }
 
             try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-
-                if (data.status === "success" || data.files) {
-                    allFiles = data.files || [];
-                    leaderboardData = data.leaderboard || [];
-                    
-                    applyFilters();
-                    renderLeaderboard();
-                } else {
-                    console.error("Dữ liệu trả về không đúng định dạng:", data);
-                    showEmptyState(true);
-                }
-            } catch (error) {
-                console.error("Lỗi khi kết nối tới API:", error);
-                showEmptyState(true);
-            } finally {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
                 showLoading(false);
-                refreshIcon.classList.remove("fa-spin");
+
+                alert(result.message || (result.success ? "Thành công" : "Thất bại"));
+
+                if (result.success && type === 'login') {
+                    currentUser = result.user;
+                    renderDashboard();
+                } else if (result.success && type === 'register') {
+                    switchAuthTab('login');
+                }
+            } catch (err) {
+                showLoading(false);
+                alert("Không thể kết nối đến hệ thống Server. Hãy kiểm tra kết nối mạng!");
             }
         }
 
-        // ==========================================
-        // 3. FILTER & SEARCH LOGIC
-        // ==========================================
-        function debounceSearch() {
-            const clearBtn = document.getElementById("clear-search");
-            const searchValue = document.getElementById("search-input").value.trim();
-            
-            clearBtn.classList.toggle("hidden", searchValue === "");
+        function renderDashboard() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
 
-            clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(() => {
-                applyFilters();
-            }, 300);
+            document.getElementById('userEmail').innerText = currentUser.email;
+            document.getElementById('userClassBadge').innerText = currentUser.userClass;
+            document.getElementById('userAccountType').innerText = currentUser.type === 'official' ? 'Học sinh chính thức' : 'Dùng thử 1 tháng';
+
+            loadDocuments();
+            loadTests();
         }
 
-        function clearSearch() {
-            document.getElementById("search-input").value = "";
-            document.getElementById("clear-search").classList.add("hidden");
-            applyFilters();
-        }
+        async function loadDocuments() {
+            const docList = document.getElementById('docList');
+            docList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang kết nối Google Drive...</div>`;
 
-        function applyFilters() {
-            const searchQuery = document.getElementById("search-input").value.toLowerCase().trim();
-            const selectedClass = document.getElementById("filter-class").value;
-            const selectedSubject = document.getElementById("filter-subject").value;
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'getDocuments', userClass: currentUser.userClass })
+                });
+                const data = await res.json();
 
-            filteredFiles = allFiles.filter(file => {
-                const matchesSearch = !searchQuery || 
-                    (file.title && file.title.toLowerCase().includes(searchQuery)) ||
-                    (file.description && file.description.toLowerCase().includes(searchQuery)) ||
-                    (file.subject && file.subject.toLowerCase().includes(searchQuery));
-
-                const matchesClass = !selectedClass || file.grade == selectedClass;
-                const matchesSubject = !selectedSubject || file.subject === selectedSubject;
-
-                return matchesSearch && matchesClass && matchesSubject;
-            });
-
-            currentPage = 1;
-            renderFiles();
-        }
-
-        function resetFilters() {
-            document.getElementById("search-input").value = "";
-            document.getElementById("filter-class").value = "";
-            document.getElementById("filter-subject").value = "";
-            document.getElementById("clear-search").classList.add("hidden");
-            applyFilters();
-        }
-
-        // ==========================================
-        // 4. RENDER FILES GRID & PAGINATION
-        // ==========================================
-        function renderFiles() {
-            const grid = document.getElementById("file-grid");
-            const fileCount = document.getElementById("file-count");
-            const emptyState = document.getElementById("empty-state");
-            const paginationContainer = document.getElementById("pagination-container");
-
-            fileCount.textContent = filteredFiles.length;
-
-            if (filteredFiles.length === 0) {
-                grid.classList.add("hidden");
-                emptyState.classList.remove("hidden");
-                paginationContainer.classList.add("hidden");
-                return;
-            }
-
-            emptyState.classList.add("hidden");
-            grid.classList.remove("hidden");
-
-            // Pagination calculation
-            const totalPages = Math.ceil(filteredFiles.length / pageSize);
-            const startIndex = (currentPage - 1) * pageSize;
-            const paginatedFiles = filteredFiles.slice(startIndex, startIndex + pageSize);
-
-            grid.innerHTML = paginatedFiles.map(file => createFileCard(file)).join("");
-
-            // Update Pagination Controls
-            if (totalPages > 1) {
-                paginationContainer.classList.remove("hidden");
-                document.getElementById("page-info").textContent = `Trang ${currentPage} / ${totalPages}`;
-                document.getElementById("btn-prev").disabled = currentPage === 1;
-                document.getElementById("btn-next").disabled = currentPage === totalPages;
-            } else {
-                paginationContainer.classList.add("hidden");
-            }
-        }
-
-        function createFileCard(file) {
-            const fileTypeIcon = getFileIcon(file.type || file.url);
-            
-            return `
-                <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
-                    <div class="space-y-3">
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="p-2.5 rounded-xl bg-slate-100 text-slate-700 group-hover:bg-blue-50 group-hover:text-blue-600 transition">
-                                ${fileTypeIcon}
+                if (data.success && data.files.length > 0) {
+                    docList.innerHTML = data.files.map(file => `
+                        <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-indigo-50/50 transition border border-slate-100">
+                            <div class="flex items-center gap-3 overflow-hidden">
+                                <i class="fa-solid fa-file-lines text-indigo-500 text-xl"></i>
+                                <div class="truncate">
+                                    <div class="text-sm font-semibold text-slate-800 truncate">${file.name}</div>
+                                    <div class="text-xs text-slate-400">${file.size}</div>
+                                </div>
                             </div>
-                            <div class="flex flex-wrap gap-1 justify-end">
-                                ${file.grade ? `<span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">Khối ${file.grade}</span>` : ''}
-                                ${file.subject ? `<span class="text-[10px] font-semibold bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md">${file.subject}</span>` : ''}
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 class="font-bold text-slate-800 line-clamp-2 text-sm sm:text-base group-hover:text-blue-600 transition" title="${file.title}">
-                                ${file.title || 'Tài liệu không tên'}
-                            </h3>
-                            <p class="text-xs text-slate-500 line-clamp-2 mt-1 leading-relaxed">
-                                ${file.description || 'Không có mô tả chi tiết.'}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-2">
-                        <span class="text-[11px] text-slate-400 font-medium">
-                            <i class="fa-regular fa-calendar-alt mr-1"></i>${file.date || 'Gần đây'}
-                        </span>
-                        
-                        <div class="flex items-center gap-2">
-                            ${file.previewUrl ? `
-                                <a href="${file.previewUrl}" target="_blank" class="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition">
-                                    Xem
-                                </a>
-                            ` : ''}
-                            <a href="${file.url}" target="_blank" download class="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 transition flex items-center gap-1">
-                                <i class="fa-solid fa-download text-[10px]"></i> Tải về
+                            <a href="${file.url}" target="_blank" class="px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-down-long"></i> Xem / Tải
                             </a>
                         </div>
-                    </div>
-                </div>
-            `;
+                    `).join('');
+                } else {
+                    docList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có tài liệu nào trong thư mục ${currentUser.userClass}</div>`;
+                }
+            } catch (e) {
+                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách tài liệu.</div>`;
+            }
         }
 
-        function changePage(delta) {
-            currentPage += delta;
-            renderFiles();
-            window.scrollTo({ top: document.getElementById("file-grid").offsetTop - 100, behavior: 'smooth' });
-        }
+        async function loadTests() {
+            const testList = document.getElementById('testList');
+            const trialNotice = document.getElementById('trialLockNotice');
 
-        // ==========================================
-        // 5. RENDER LEADERBOARD
-        // ==========================================
-        function renderLeaderboard() {
-            const tbody = document.getElementById("leaderboard-body");
-            
-            if (!leaderboardData || leaderboardData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="text-center py-6 text-xs text-slate-400">Chưa có dữ liệu bảng vinh danh.</td>
-                    </tr>
-                `;
+            if (!currentUser.canTest) {
+                trialNotice.classList.remove('hidden');
+                testList.innerHTML = `<div class="text-slate-400 text-sm py-12 text-center"><i class="fa-solid fa-lock text-3xl mb-3 block text-slate-300"></i>Tính năng bị khóa với tài khoản dùng thử</div>`;
                 return;
             }
 
-            tbody.innerHTML = leaderboardData.map((item, index) => {
-                let rankBadge = `<span class="font-bold text-slate-500">${index + 1}</span>`;
-                if (index === 0) rankBadge = `<i class="fa-solid fa-medal text-amber-500 text-lg" title="Hạng 1"></i>`;
-                else if (index === 1) rankBadge = `<i class="fa-solid fa-medal text-slate-400 text-lg" title="Hạng 2"></i>`;
-                else if (index === 2) rankBadge = `<i class="fa-solid fa-medal text-amber-700 text-lg" title="Hạng 3"></i>`;
+            trialNotice.classList.add('hidden');
+            testList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải bài kiểm tra...</div>`;
 
-                return `
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="py-3.5 px-4 text-center">${rankBadge}</td>
-                        <td class="py-3.5 px-4 font-bold text-slate-800">${item.name || 'Thí sinh'}</td>
-                        <td class="py-3.5 px-4 text-slate-600 text-xs">${item.class || 'N/A'}</td>
-                        <td class="py-3.5 px-4 text-center font-extrabold text-blue-600">${item.score || 0}</td>
-                        <td class="py-3.5 px-4 text-center">
-                            <span class="text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full">
-                                ${item.badge || 'Thành viên xuất sắc'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join("");
-        }
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'getTests', userClass: currentUser.userClass })
+                });
+                const data = await res.json();
 
-        // ==========================================
-        // 6. HELPER FUNCTIONS
-        // ==========================================
-        function getFileIcon(fileTypeOrUrl = '') {
-            const str = fileTypeOrUrl.toLowerCase();
-            if (str.includes('pdf')) return '<i class="fa-solid fa-file-pdf text-red-500 text-xl"></i>';
-            if (str.includes('doc') || str.includes('word')) return '<i class="fa-solid fa-file-word text-blue-500 text-xl"></i>';
-            if (str.includes('xls') || str.includes('sheet') || str.includes('csv')) return '<i class="fa-solid fa-file-excel text-emerald-500 text-xl"></i>';
-            if (str.includes('ppt') || str.includes('presentation')) return '<i class="fa-solid fa-file-powerpoint text-orange-500 text-xl"></i>';
-            if (str.includes('zip') || str.includes('rar')) return '<i class="fa-solid fa-file-zipper text-purple-500 text-xl"></i>';
-            return '<i class="fa-solid fa-file-lines text-slate-500 text-xl"></i>';
-        }
-
-        function showLoading(isLoading) {
-            document.getElementById("loading-spinner").classList.toggle("hidden", !isLoading);
-            if (isLoading) {
-                document.getElementById("file-grid").classList.add("hidden");
-                document.getElementById("empty-state").classList.add("hidden");
+                if (data.success && data.tests.length > 0) {
+                    testList.innerHTML = data.tests.map(test => `
+                        <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl hover:bg-emerald-50/50 transition border border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-clipboard-question text-emerald-600 text-xl"></i>
+                                <div class="text-sm font-semibold text-slate-800">${test.title}</div>
+                            </div>
+                            <a href="${test.link}" target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition">
+                                Làm bài
+                            </a>
+                        </div>
+                    `).join('');
+                } else {
+                    testList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có bài kiểm tra cho ${currentUser.userClass}</div>`;
+                }
+            } catch (e) {
+                testList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải bài kiểm tra.</div>`;
             }
         }
 
-        function showEmptyState(isEmpty) {
-            document.getElementById("empty-state").classList.toggle("hidden", !isEmpty);
-            if (isEmpty) {
-                document.getElementById("file-grid").classList.add("hidden");
-            }
+        function logout() {
+            currentUser = null;
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('dashboardContainer').classList.add('hidden');
         }
     </script>
 </body>
