@@ -3,445 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Học Tập Online</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Hệ Thống Học Tập Trực Tuyến</title>
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .page-section { display: none; }
-        .page-section.active { display: block; }
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #10B981;
+            --bg-color: #F3F4F6;
+            --surface: #FFFFFF;
+            --text-main: #1F2937;
+            --text-light: #6B7280;
+            --danger: #EF4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Banner & Header */
+        header { background: var(--surface); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links button { background: none; border: none; font-size: 16px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.3s; }
+        .nav-links button:hover, .nav-links button.active { color: var(--primary); }
+        .btn-logout { color: var(--danger) !important; }
+
+        /* Main Content */
+        main { flex: 1; padding: 40px 20px; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Auth Forms (Đăng nhập/Đăng ký) */
+        .auth-container { background: var(--surface); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); max-width: 400px; margin: 50px auto; text-align: center; }
+        .auth-container h2 { margin-bottom: 20px; color: var(--primary); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 14px; margin-bottom: 5px; color: var(--text-light); }
+        .input-group input, .input-group select { width: 100%; padding: 10px 15px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 15px; outline: none; transition: 0.3s; }
+        .input-group input:focus, .input-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-bottom: 10px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: var(--bg-color); color: var(--text-main); }
+        .btn-secondary:hover { background: #E5E7EB; }
+        #authMessage { font-size: 14px; margin-top: 10px; color: var(--danger); }
+
+        /* Cards (Tài liệu & Bài tập) */
+        .page-title { font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; display: inline-block; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); padding: 20px; border-radius: 10px; box-shadow: var(--shadow); transition: 0.3s; display: flex; flex-direction: column; align-items: flex-start; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .card i { font-size: 30px; color: var(--primary); margin-bottom: 15px; }
+        .card h4 { margin-bottom: 10px; font-size: 16px; word-break: break-word; }
+        .card a { margin-top: auto; text-decoration: none; background: var(--primary); color: white; padding: 8px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        .card a:hover { background: var(--primary-hover); }
+
+        .alert-box { background: #FEE2E2; color: var(--danger); padding: 15px; border-radius: 8px; font-weight: 600; text-align: center; margin-top: 20px; }
+
+        /* Floating Chatbot */
+        .chatbot-toggle { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); transition: 0.3s; z-index: 1000; }
+        .chatbot-toggle:hover { transform: scale(1.1); }
+        .chatbot-window { position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: var(--surface); border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; overflow: hidden; z-index: 1000; opacity: 0; pointer-events: none; transform: translateY(20px); transition: 0.3s; }
+        .chatbot-window.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .chat-header { background: var(--primary); color: white; padding: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header i { cursor: pointer; }
+        .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #F9FAFB; }
+        .chat-msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
+        .msg-bot { background: white; align-self: flex-start; border-bottom-left-radius: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+        .chat-input { display: flex; border-top: 1px solid #E5E7EB; padding: 10px; background: white; }
+        .chat-input input { flex: 1; border: none; padding: 10px; outline: none; background: #F3F4F6; border-radius: 20px; padding-left: 15px; }
+        .chat-input button { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; margin-left: 10px; cursor: pointer; }
+
+        /* Footer */
+        footer { background: var(--surface); text-align: center; padding: 20px; color: var(--text-light); font-size: 14px; border-top: 1px solid #E5E7EB; margin-top: auto; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body>
 
-    <!-- CẤU HÌNH API URL SCRIPT -->
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxAe69m4jAYcEj89ZwFezzkwCr2R0bysN5J27LV5kwudRwSEaa7aiKnHFh2mpr1iO_6/exec";
-    </script>
+    <!-- Header / Banner -->
+    <header>
+        <div class="logo"><i class="fa-solid fa-graduation-cap"></i> EduSystem</div>
+        <nav class="nav-links" id="mainNav" style="display: none;">
+            <button onclick="switchView('docsView')" id="btn-docsView" class="active"><i class="fa-regular fa-folder-open"></i> Tài liệu</button>
+            <button onclick="switchView('testsView')" id="btn-testsView"><i class="fa-solid fa-file-pen"></i> Bài tập</button>
+            <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</button>
+        </nav>
+    </header>
 
-    <!-- TRANG 1: ĐĂNG NHẬP / ĐĂNG KÝ -->
-    <div id="page-auth" class="page-section active flex-1 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 max-w-md w-full p-8">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl mb-3">
-                    <i class="fa-solid fa-graduation-cap text-3xl"></i>
+    <!-- Main Content -->
+    <main>
+        <!-- 1. Trang Đăng Nhập / Đăng Ký -->
+        <section id="authView" class="view-section active">
+            <div class="auth-container">
+                <h2>Bắt đầu học tập</h2>
+                <div class="input-group">
+                    <label>Email của bạn</label>
+                    <input type="email" id="email" placeholder="Ví dụ: hocsinh@gmail.com">
                 </div>
-                <h1 class="text-2xl font-bold text-slate-900">Trung Tâm Học Tập</h1>
-                <p class="text-slate-500 text-sm mt-1">Cổng thông tin bài tập, tài liệu & AI hỗ trợ</p>
-            </div>
-
-            <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-sm font-semibold">
-                <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Đăng Nhập</button>
-                <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-slate-500 transition">Đăng Ký Thử</button>
-            </div>
-
-            <!-- Form Đăng Nhập -->
-            <form id="loginForm" onsubmit="handleAuth(event, 'login')" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Email tài khoản</label>
-                    <input type="email" id="loginEmail" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                <div class="input-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" id="password" placeholder="••••••••">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Mật khẩu</label>
-                    <input type="password" id="loginPassword" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Đăng Nhập</button>
-            </form>
-
-            <!-- Form Đăng Ký -->
-            <form id="registerForm" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Email của bạn</label>
-                    <input type="email" id="regEmail" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Mật khẩu</label>
-                    <input type="password" id="regPassword" required class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Chọn Lớp Học</label>
-                    <select id="regClass" class="w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
+                <div class="input-group">
+                    <label>Chọn Lớp</label>
+                    <select id="classSelect">
                         <option value="Lớp 10">Lớp 10</option>
                         <option value="Lớp 11">Lớp 11</option>
                         <option value="Lớp 12">Lớp 12</option>
                     </select>
                 </div>
-                <div class="text-xs text-amber-600 bg-amber-50 p-3 rounded-lg flex items-center gap-2">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Dùng thử 30 ngày. Không thể làm bài kiểm tra online.</span>
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-lg shadow-indigo-200">Tạo Tài Khoản Dùng Thử</button>
-            </form>
+                <button class="btn btn-primary" id="btnLogin" onclick="login()">Đăng Nhập</button>
+                <button class="btn btn-secondary" id="btnRegister" onclick="register()">Đăng Ký (Dùng thử 1 tháng)</button>
+                <p id="authMessage"></p>
+            </div>
+        </section>
+
+        <!-- 2. Trang Tài Liệu -->
+        <section id="docsView" class="view-section">
+            <h2 class="page-title">Kho tài liệu <span id="docsClassName" style="color:var(--primary)"></span></h2>
+            <div id="materialsList" class="grid-container">
+                <!-- Nội dung sẽ được render bằng JS -->
+                <p><i class="fa-solid fa-spinner fa-spin"></i> Đang tải tài liệu...</p>
+            </div>
+        </section>
+
+        <!-- 3. Trang Bài Tập / Kiểm Tra -->
+        <section id="testsView" class="view-section">
+            <h2 class="page-title">Bài kiểm tra & Bài tập</h2>
+            <div id="testsContent">
+                <!-- Nội dung bài tập hoặc cảnh báo sẽ hiển thị ở đây -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Chatbot Nổi -->
+    <div class="chatbot-toggle" onclick="toggleChat()">
+        <i class="fa-solid fa-message"></i>
+    </div>
+    
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chat-header">
+            <span><i class="fa-solid fa-robot"></i> Trợ lý AI (Groq)</span>
+            <i class="fa-solid fa-times" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-msg msg-bot">Xin chào! Tôi có thể giúp gì cho việc học của bạn hôm nay?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Nhập câu hỏi..." onkeypress="handleChatEnter(event)">
+            <button onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD ĐA TRANG -->
-    <div id="mainDashboard" class="hidden min-h-screen flex flex-col">
-        <!-- NAVBAR -->
-        <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <span id="userClassBadge" class="text-xs bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-bold">Lớp --</span>
-                    </div>
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 EduSystem. Hệ thống quản lý học tập trực tuyến.
+    </footer>
 
-                    <nav class="hidden md:flex items-center gap-1">
-                        <button onclick="navigateTo('page-docs')" id="nav-docs" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50">
-                            <i class="fa-solid fa-folder-open mr-1.5"></i>Tài Liệu
-                        </button>
-                        <button onclick="navigateTo('page-tests')" id="nav-tests" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-pen-to-square mr-1.5"></i>Bài Kiểm Tra
-                        </button>
-                        <button onclick="navigateTo('page-ai')" id="nav-ai" class="nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">
-                            <i class="fa-solid fa-robot mr-1.5"></i>Trợ Lý AI (Groq Script)
-                        </button>
-                    </nav>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="text-right hidden sm:block">
-                        <div id="userEmail" class="text-sm font-semibold text-slate-700">email@example.com</div>
-                        <div id="userAccountType" class="text-xs text-slate-400">Tài khoản</div>
-                    </div>
-                    <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-600 transition rounded-lg hover:bg-slate-100" title="Đăng xuất">
-                        <i class="fa-solid fa-right-from-bracket text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Nav Bar -->
-            <div class="md:hidden flex border-t border-slate-100 bg-slate-50 px-2 py-1.5 justify-around text-xs font-medium">
-                <button onclick="navigateTo('page-docs')" class="p-2 text-indigo-600 font-bold"><i class="fa-solid fa-folder-open block text-center text-base mb-0.5"></i>Tài liệu</button>
-                <button onclick="navigateTo('page-tests')" class="p-2 text-slate-500"><i class="fa-solid fa-pen-to-square block text-center text-base mb-0.5"></i>Kiểm tra</button>
-                <button onclick="navigateTo('page-ai')" class="p-2 text-slate-500"><i class="fa-solid fa-robot block text-center text-base mb-0.5"></i>Hỏi AI</button>
-            </div>
-        </header>
-
-        <!-- NOIDUNG TRANG -->
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-            
-            <!-- TRANG TÀI LIỆU -->
-            <section id="page-docs" class="page-section active">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h3 class="font-bold text-xl text-slate-900">Tài Liệu Học Tập</h3>
-                            <p class="text-sm text-slate-500 mt-0.5">Lưu trữ từ Google Drive giáo viên</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <a id="directDriveBtn" href="#" target="_blank" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
-                                <i class="fa-brands fa-google-drive text-emerald-600 text-sm"></i> Mở Folder Drive
-                            </a>
-                            <button onclick="loadDocuments()" class="px-3.5 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl text-xs font-semibold transition">
-                                <i class="fa-solid fa-rotate mr-1"></i> Tải lại
-                            </button>
-                        </div>
-                    </div>
-                    <div id="docList" class="space-y-3 min-h-[200px]"></div>
-                </div>
-            </section>
-
-            <!-- TRANG BÀI KIỂM TRA -->
-            <section id="page-tests" class="page-section">
-                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                    <div class="mb-6">
-                        <h3 class="font-bold text-xl text-slate-900">Bài Kiểm Tra Online</h3>
-                        <p class="text-sm text-slate-500 mt-0.5">Nội dung cập nhật từ Google Sheets</p>
-                    </div>
-
-                    <div id="trialLockNotice" class="hidden bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 mb-6 text-sm flex gap-3 items-start">
-                        <i class="fa-solid fa-lock text-amber-600 text-lg mt-0.5"></i>
-                        <div>
-                            <div class="font-semibold">Hạn chế tài khoản dùng thử</div>
-                            <div class="text-xs mt-0.5">Tài khoản dùng thử không làm được bài kiểm tra. Hãy đăng ký chính thức với giáo viên!</div>
-                        </div>
-                    </div>
-
-                    <div id="testList" class="space-y-3 min-h-[200px]"></div>
-                </div>
-            </section>
-
-            <!-- TRANG CHATBOT AI -->
-            <section id="page-ai" class="page-section">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[650px]">
-                    <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-robot"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 leading-none">Trợ Lý AI Học Tập</h3>
-                                <span class="text-[11px] text-emerald-600 font-medium">● Đã kết nối Groq API (Google Apps Script Backend)</span>
-                            </div>
-                        </div>
-                        <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash mr-1"></i>Xóa chat</button>
-                    </div>
-
-                    <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4">
-                        <div class="flex gap-3 items-start">
-                            <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
-                            <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-700">
-                                Xin chào! Mình là AI học tập. Bạn cần giải bài tập nào hôm nay?
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 border-t border-slate-100 bg-white rounded-b-2xl">
-                        <form onsubmit="sendAiMessage(event)" class="flex gap-2">
-                            <input type="text" id="aiInput" placeholder="Nhập câu hỏi hoặc bài tập..." class="flex-1 px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm bg-slate-50">
-                            <button type="submit" id="sendAiBtn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition flex items-center gap-2">
-                                <span>Gửi</span> <i class="fa-solid fa-paper-plane text-xs"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Màn hình chờ Loading -->
-    <div id="loading" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center">
-        <div class="bg-white p-5 rounded-2xl shadow-2xl flex items-center gap-3">
-            <div class="w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-sm font-medium text-slate-700">Đang kết nối Server...</span>
-        </div>
-    </div>
-
+    <!-- Logic JavaScript -->
     <script>
-        let currentUser = null;
-        let chatHistory = [];
+        let currentUser = { role: null, lop: null };
 
-        function showLoading(show) {
-            document.getElementById('loading').classList.toggle('hidden', !show);
-        }
-
-        function navigateTo(pageId) {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100";
-            });
-            if(pageId === 'page-docs') document.getElementById('nav-docs').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
-            if(pageId === 'page-tests') document.getElementById('nav-tests').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
-            if(pageId === 'page-ai') document.getElementById('nav-ai').className = "nav-btn px-4 py-2 rounded-xl text-sm font-semibold text-indigo-600 bg-indigo-50";
-        }
-
-        function switchAuthTab(tab) {
-            const isLogin = tab === 'login';
-            document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
-            document.getElementById('registerForm').classList.toggle('hidden', isLogin);
-            document.getElementById('tabLoginBtn').className = isLogin ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" : "flex-1 py-2 rounded-lg text-slate-500 transition";
-            document.getElementById('tabRegisterBtn').className = !isLogin ? "flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition" : "flex-1 py-2 rounded-lg text-slate-500 transition";
-        }
-
-        async function callApi(payload) {
-            const formData = new FormData();
-            for (const key in payload) { formData.append(key, payload[key]); }
-            const res = await fetch(API_URL, { method: 'POST', body: formData });
-            return await res.json();
-        }
-
-        async function handleAuth(e, type) {
-            e.preventDefault();
-            showLoading(true);
-
-            let payload = { action: type };
-            if (type === 'login') {
-                payload.email = document.getElementById('loginEmail').value;
-                payload.password = document.getElementById('loginPassword').value;
-            } else {
-                payload.email = document.getElementById('regEmail').value;
-                payload.password = document.getElementById('regPassword').value;
-                payload.userClass = document.getElementById('regClass').value;
-            }
-
-            try {
-                const result = await callApi(payload);
-                showLoading(false);
-                alert(result.message || (result.success ? "Thành công" : "Thất bại"));
-
-                if (result.success && type === 'login') {
-                    currentUser = result.user;
-                    renderDashboard();
-                } else if (result.success && type === 'register') {
-                    switchAuthTab('login');
-                }
-            } catch (err) {
-                showLoading(false);
-                alert("Lỗi kết nối tới Server!");
-            }
-        }
-
-        function renderDashboard() {
-            document.getElementById('page-auth').classList.remove('active');
-            document.getElementById('mainDashboard').classList.remove('hidden');
-
-            document.getElementById('userEmail').innerText = currentUser.email;
-            document.getElementById('userClassBadge').innerText = currentUser.userClass;
-            document.getElementById('userAccountType').innerText = currentUser.type === 'official' ? 'Học sinh chính thức' : 'Tài khoản dùng thử';
-
-            navigateTo('page-docs');
-            loadDocuments();
-            loadTests();
-        }
-
-        async function loadDocuments() {
-            const docList = document.getElementById('docList');
-            docList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải dữ liệu Google Drive...</div>`;
-
-            try {
-                const data = await callApi({ action: 'getDocuments', userClass: currentUser.userClass });
-
-                if (data.folderUrl) {
-                    document.getElementById('directDriveBtn').href = data.folderUrl;
-                }
-
-                if (data.success && data.files && data.files.length > 0) {
-                    docList.innerHTML = data.files.map(file => `
-                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-indigo-50/50 transition border border-slate-100">
-                            <div class="flex items-center gap-3 overflow-hidden">
-                                <i class="fa-solid fa-file-pdf text-red-500 text-2xl"></i>
-                                <div class="truncate">
-                                    <div class="text-sm font-semibold text-slate-800 truncate">${file.name}</div>
-                                    <div class="text-xs text-slate-400">${file.size}</div>
-                                </div>
-                            </div>
-                            <a href="${file.url}" target="_blank" class="px-3.5 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition shrink-0 flex items-center gap-1">
-                                <i class="fa-solid fa-arrow-down-long"></i> Xem / Tải
-                            </a>
-                        </div>
-                    `).join('');
-                } else {
-                    docList.innerHTML = `
-                        <div class="text-slate-400 text-sm py-8 text-center">
-                            <p>Chưa tìm thấy tệp hiển thị danh sách trực tiếp.</p>
-                            <a href="${data.folderUrl || '#'}" target="_blank" class="mt-2 inline-block text-indigo-600 hover:underline font-semibold">
-                                Bấm vào đây để mở Folder Drive ${currentUser.userClass}
-                            </a>
-                        </div>`;
-                }
-            } catch (e) {
-                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải dữ liệu.</div>`;
-            }
-        }
-
-        async function loadTests() {
-            const testList = document.getElementById('testList');
-            const trialNotice = document.getElementById('trialLockNotice');
-
-            if (!currentUser.canTest) {
-                trialNotice.classList.remove('hidden');
-                testList.innerHTML = `<div class="text-slate-400 text-sm py-12 text-center"><i class="fa-solid fa-lock text-3xl mb-3 block text-slate-300"></i>Tính năng bị khóa với tài khoản dùng thử</div>`;
-                return;
-            }
-
-            trialNotice.classList.add('hidden');
-            testList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải bài kiểm tra...</div>`;
-
-            try {
-                const data = await callApi({ action: 'getTests', userClass: currentUser.userClass });
-
-                if (data.success && data.tests.length > 0) {
-                    testList.innerHTML = data.tests.map(test => `
-                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-emerald-50/50 transition border border-slate-100">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-clipboard-question text-emerald-600 text-2xl"></i>
-                                <div class="text-sm font-semibold text-slate-800">${test.title}</div>
-                            </div>
-                            <a href="${test.link}" target="_blank" class="px-4 py-2 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition shrink-0">
-                                Làm bài
-                            </a>
-                        </div>
-                    `).join('');
-                } else {
-                    testList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có bài kiểm tra cho ${currentUser.userClass}</div>`;
-                }
-            } catch (e) {
-                testList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách.</div>`;
-            }
-        }
-
-        // ==========================================
-        // GỌI AI THÔNG QUA SCRIPT BACKEND (BẢO MẬT API KEY)
-        // ==========================================
-        async function sendAiMessage(e) {
-            e.preventDefault();
-            const inputEl = document.getElementById('aiInput');
-            const userMsg = inputEl.value.trim();
-            if (!userMsg) return;
-
-            const chatBox = document.getElementById('chatBox');
+        // --- ĐIỀU HƯỚNG VIEW ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
             
-            chatBox.innerHTML += `
-                <div class="flex gap-3 items-start justify-end">
-                    <div class="bg-indigo-600 text-white rounded-2xl p-3.5 text-sm max-w-[80%]">
-                        ${userMsg}
-                    </div>
-                </div>`;
-            
-            inputEl.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            const loadingId = "ai-loading-" + Date.now();
-            chatBox.innerHTML += `
-                <div id="${loadingId}" class="flex gap-3 items-start">
-                    <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
-                    <div class="bg-slate-100 rounded-2xl p-3.5 text-sm text-slate-500 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-notch animate-spin"></i> Apps Script đang gửi yêu cầu Groq AI...
-                    </div>
-                </div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            chatHistory.push({ role: "user", content: userMsg });
-
-            try {
-                const data = await callApi({
-                    action: 'chatAI',
-                    messages: JSON.stringify(chatHistory)
-                });
-
-                document.getElementById(loadingId).remove();
-
-                if (data.success && data.reply) {
-                    chatHistory.push({ role: "assistant", content: data.reply });
-
-                    chatBox.innerHTML += `
-                        <div class="flex gap-3 items-start">
-                            <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
-                            <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-800 whitespace-pre-line leading-relaxed">
-                                ${data.reply}
-                            </div>
-                        </div>`;
-                } else {
-                    alert(data.message || "Không thể phản hồi từ AI.");
-                }
-            } catch (err) {
-                document.getElementById(loadingId).remove();
-                alert("Lỗi khi kết nối tới Server AI!");
+            // Cập nhật trạng thái active cho thanh nav
+            document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
+            if(document.getElementById('btn-' + viewId)) {
+                document.getElementById('btn-' + viewId).classList.add('active');
             }
-            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Load dữ liệu khi chuyển tab
+            if(viewId === 'docsView') loadMaterials();
+            if(viewId === 'testsView') loadTests();
         }
 
-        function clearChat() {
-            chatHistory = [];
-            document.getElementById('chatBox').innerHTML = `
-                <div class="flex gap-3 items-start">
-                    <div class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs">AI</div>
-                    <div class="bg-slate-100 rounded-2xl p-3.5 text-sm max-w-[80%] text-slate-700">
-                        Đã xóa lịch sử chat. Bạn muốn hỏi bài tập gì tiếp theo?
-                    </div>
-                </div>`;
+        // --- XỬ LÝ AUTH ---
+        function login() {
+            let email = document.getElementById("email").value;
+            let pass = document.getElementById("password").value;
+            let btn = document.getElementById("btnLogin");
+            
+            if(!email || !pass) return showAuthMsg("Vui lòng nhập đủ thông tin.");
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.disabled = true;
+
+            google.script.run.withSuccessHandler(function(res) {
+                btn.innerHTML = 'Đăng Nhập'; btn.disabled = false;
+                
+                if(res.status === "success") {
+                    currentUser = { role: res.role, lop: res.lop };
+                    document.getElementById('mainNav').style.display = 'flex';
+                    document.getElementById('docsClassName').innerText = '- ' + currentUser.lop;
+                    switchView('docsView'); // Chuyển thẳng vào trang tài liệu
+                } else {
+                    showAuthMsg(res.message);
+                }
+            }).loginUser(email, pass);
+        }
+
+        function register() {
+            let email = document.getElementById("email").value;
+            let pass = document.getElementById("password").value;
+            let lop = document.getElementById("classSelect").value;
+            let btn = document.getElementById("btnRegister");
+            
+            if(!email || !pass) return showAuthMsg("Vui lòng nhập đủ thông tin.");
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            btn.disabled = true;
+
+            google.script.run.withSuccessHandler(function(msg) {
+                btn.innerHTML = 'Đăng Ký (Dùng thử 1 tháng)'; btn.disabled = false;
+                showAuthMsg(msg, true);
+            }).registerUser(email, pass, lop);
         }
 
         function logout() {
-            currentUser = null;
-            document.getElementById('mainDashboard').classList.add('hidden');
-            document.getElementById('page-auth').classList.add('active');
+            currentUser = { role: null, lop: null };
+            document.getElementById('mainNav').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('authMessage').innerText = '';
+            switchView('authView');
+        }
+
+        function showAuthMsg(msg, isSuccess = false) {
+            let el = document.getElementById("authMessage");
+            el.innerText = msg;
+            el.style.color = isSuccess ? "var(--secondary)" : "var(--danger)";
+        }
+
+        // --- LẤY DỮ LIỆU TỪ SERVER ---
+        function loadMaterials() {
+            document.getElementById("materialsList").innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu từ Google Drive...</p>';
+            google.script.run.withSuccessHandler(function(files) {
+                let html = "";
+                if(files.length === 0) {
+                    html = "<p>Chưa có tài liệu nào cho lớp này.</p>";
+                } else {
+                    files.forEach(f => {
+                        html += `
+                            <div class="card">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <h4>${f.name}</h4>
+                                <a href="${f.url}" target="_blank">Xem / Tải về</a>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById("materialsList").innerHTML = html;
+            }).getMaterials(currentUser.lop);
+        }
+
+        function loadTests() {
+            let container = document.getElementById("testsContent");
+            
+            // Chặn quyền Trial
+            if(currentUser.role === "trial") {
+                container.innerHTML = `
+                    <div class="alert-box">
+                        <i class="fa-solid fa-lock"></i> Tính năng làm bài kiểm tra bị khóa đối với Tài khoản Dùng thử.<br>
+                        Vui lòng liên hệ Giáo viên để được cấp tài khoản Học sinh chính thức.
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = '<p><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách bài tập...</p>';
+            
+            google.script.run.withSuccessHandler(function(tests) {
+                let html = '<div class="grid-container">';
+                if(tests.length === 0) {
+                    html = "<p>Chưa có bài kiểm tra nào.</p>";
+                } else {
+                    tests.forEach(t => {
+                        html += `
+                            <div class="card">
+                                <i class="fa-solid fa-laptop-file"></i>
+                                <h4>${t.name}</h4>
+                                <a href="${t.url}" target="_blank">Làm bài ngay</a>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+                container.innerHTML = html;
+            }).getTests(currentUser.lop); // Cần hàm getTests ở file Code.gs
+        }
+
+        // --- CHATBOT LOGIC ---
+        function toggleChat() {
+            document.getElementById('chatbotWindow').classList.toggle('show');
+        }
+
+        function handleChatEnter(e) {
+            if(e.key === 'Enter') sendChat();
+        }
+
+        function sendChat() {
+            let input = document.getElementById("chatInput");
+            let msg = input.value.trim();
+            if(!msg) return;
+
+            let chatBody = document.getElementById("chatBody");
+            
+            // Add user message
+            chatBody.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
+            input.value = "";
+            
+            // Add loading bot message
+            let loadingId = 'loading-' + Date.now();
+            chatBody.innerHTML += `<div class="chat-msg msg-bot" id="${loadingId}"><i class="fa-solid fa-ellipsis fa-fade"></i></div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Call API
+            google.script.run.withSuccessHandler(function(response) {
+                document.getElementById(loadingId).innerText = response;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }).chatWithGroq(msg);
         }
     </script>
 </body>
