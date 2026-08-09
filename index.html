@@ -16,9 +16,9 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-    <!-- CẤU HÌNH API URL -->
+    <!-- CẤU HÌNH API URL WEB APP MỚI -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw9_jP-hcRohFoBMQ5PkaDPI7Nig6xulFWKscFSLKRuaZBkxx5O-HkvVXiWKbnguTVG/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbyzspownNRk8zCZj08fRTpANDvloryoLSp6VvTeBiUdDRjh_l-EqG2GqGr39rDxq906/exec";
     </script>
 
     <!-- FORM ĐĂNG NHẬP / ĐĂNG KÝ -->
@@ -32,7 +32,7 @@
                 <p class="text-slate-500 text-sm mt-1">Hệ thống tài liệu & kiểm tra trực tuyến</p>
             </div>
 
-            <!-- Tab chọn Đăng nhập/Đăng ký -->
+            <!-- Tab chọn Đăng nhập / Đăng ký -->
             <div class="flex bg-slate-100 p-1 rounded-xl mb-6 text-sm font-semibold">
                 <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-lg bg-white shadow-sm text-indigo-600 transition">Đăng Nhập</button>
                 <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-lg text-slate-500 transition">Đăng Ký Thử</button>
@@ -119,7 +119,9 @@
                             <p class="text-xs text-slate-500">Tải lên từ Google Drive giáo viên</p>
                         </div>
                     </div>
-                    <button onclick="loadDocuments()" class="text-xs text-indigo-600 hover:underline">Tải lại</button>
+                    <button onclick="loadDocuments()" class="text-xs text-indigo-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-rotate"></i> Tải lại
+                    </button>
                 </div>
                 <div id="docList" class="space-y-3 flex-1"></div>
             </section>
@@ -156,7 +158,7 @@
     <div id="loading" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center">
         <div class="bg-white p-5 rounded-2xl shadow-2xl flex items-center gap-3">
             <div class="w-6 h-6 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-sm font-medium text-slate-700">Đang xử lý...</span>
+            <span class="text-sm font-medium text-slate-700">Đang xử lý dữ liệu...</span>
         </div>
     </div>
 
@@ -181,6 +183,19 @@
                 : "flex-1 py-2 rounded-lg text-slate-500 transition";
         }
 
+        // Hàm gọi API gửi dưới dạng FormData để tránh CORS trên Apps Script
+        async function callApi(payload) {
+            const formData = new FormData();
+            for (const key in payload) {
+                formData.append(key, payload[key]);
+            }
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                body: formData
+            });
+            return await res.json();
+        }
+
         async function handleAuth(e, type) {
             e.preventDefault();
             showLoading(true);
@@ -196,12 +211,7 @@
             }
 
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await res.json();
+                const result = await callApi(payload);
                 showLoading(false);
 
                 alert(result.message || (result.success ? "Thành công" : "Thất bại"));
@@ -214,7 +224,7 @@
                 }
             } catch (err) {
                 showLoading(false);
-                alert("Không thể kết nối đến hệ thống Server. Hãy kiểm tra kết nối mạng!");
+                alert("Không thể kết nối tới Server. Vui lòng kiểm tra lại đường truyền mạng!");
             }
         }
 
@@ -232,15 +242,10 @@
 
         async function loadDocuments() {
             const docList = document.getElementById('docList');
-            docList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang kết nối Google Drive...</div>`;
+            docList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải tài liệu từ Google Drive...</div>`;
 
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'getDocuments', userClass: currentUser.userClass })
-                });
-                const data = await res.json();
+                const data = await callApi({ action: 'getDocuments', userClass: currentUser.userClass });
 
                 if (data.success && data.files.length > 0) {
                     docList.innerHTML = data.files.map(file => `
@@ -252,7 +257,7 @@
                                     <div class="text-xs text-slate-400">${file.size}</div>
                                 </div>
                             </div>
-                            <a href="${file.url}" target="_blank" class="px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                            <a href="${file.url}" target="_blank" class="px-3 py-1.5 bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg text-xs font-semibold transition flex items-center gap-1 shrink-0">
                                 <i class="fa-solid fa-arrow-down-long"></i> Xem / Tải
                             </a>
                         </div>
@@ -261,7 +266,7 @@
                     docList.innerHTML = `<div class="text-slate-400 text-sm py-8 text-center">Chưa có tài liệu nào trong thư mục ${currentUser.userClass}</div>`;
                 }
             } catch (e) {
-                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Lỗi tải danh sách tài liệu.</div>`;
+                docList.innerHTML = `<div class="text-red-500 text-sm py-4 text-center">Không thể kết nối đến tài liệu Drive.</div>`;
             }
         }
 
@@ -279,12 +284,7 @@
             testList.innerHTML = `<div class="text-slate-400 text-sm py-4 text-center"><i class="fa-solid fa-spinner animate-spin"></i> Đang tải bài kiểm tra...</div>`;
 
             try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'getTests', userClass: currentUser.userClass })
-                });
-                const data = await res.json();
+                const data = await callApi({ action: 'getTests', userClass: currentUser.userClass });
 
                 if (data.success && data.tests.length > 0) {
                     testList.innerHTML = data.tests.map(test => `
@@ -293,7 +293,7 @@
                                 <i class="fa-solid fa-clipboard-question text-emerald-600 text-xl"></i>
                                 <div class="text-sm font-semibold text-slate-800">${test.title}</div>
                             </div>
-                            <a href="${test.link}" target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition">
+                            <a href="${test.link}" target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-lg text-xs font-semibold transition shrink-0">
                                 Làm bài
                             </a>
                         </div>
